@@ -1,0 +1,21 @@
+.navigationbar{
+    width: 100%;
+    height: 50px;
+    background-color: black;
+}
+  
+.navigationbar a {
+    margin-top: 10px;
+    margin-left: 20px;
+    color: white;
+    float: left;
+}
+
+.navigationbar a:hover {
+    background-color: rgb(243, 69, 69);
+}
+  
+.navicationbar-right {
+    float: right;
+    margin-right: 20px;
+}

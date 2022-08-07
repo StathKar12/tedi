@@ -1,0 +1,41 @@
+.PostAuctionCSS {
+    width: 600px;
+    height: auto;
+    border-radius: 10px;
+    display: grid;
+    margin-top: 50px;
+    box-shadow: black;
+    font-weight: bold;
+}
+  
+.PostAuctionCSS #PostAuctionForm {
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding-left: 10px;
+    font-size: 20px;
+    
+}
+  
+.PostAuctionCSS button {
+    margin-top: 15px;
+    height: 40px;
+    border: none;
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+  
+.PostAuctionCSS button:hover {
+    cursor: pointer;
+    background-color: maroon;
+}
+
+h1{
+    font-size: medium;
+    font-weight: bold;
+    color :red;
+}
