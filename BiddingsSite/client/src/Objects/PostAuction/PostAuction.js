@@ -3,8 +3,12 @@ import {Formik,Form,Field,ErrorMessage} from "formik";
 import "./PostAuction.css";
 import * as Yup from 'yup';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function PostAuction(){
+    
+    let navigate=useNavigate();
+
     const initialValues={
         Title:"",
         Text:"",
@@ -12,6 +16,7 @@ function PostAuction(){
     };
     const onSubmit=(data)=>{
         axios.post("http://localhost:8080/Auctions",data);
+        navigate("/");
     };
     const validationSchema = Yup.object().shape({
         Title: Yup.string().required(),
