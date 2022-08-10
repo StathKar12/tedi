@@ -1,8 +1,8 @@
 import React from "react";
 import {Formik,Form,Field,ErrorMessage} from "formik";
-import "./PostAuction.css";
 import * as Yup from 'yup';
 import axios from "axios";
+import "./PostAuction.css";
 
 function PostAuction(){
     const initialValues={

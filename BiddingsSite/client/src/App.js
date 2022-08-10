@@ -3,6 +3,8 @@ import "./Objects/Navigation/NavigationBar.css"
 import { BrowserRouter as Router, Route, Routes,Link} from 'react-router-dom';
 import Homepage from "./Objects/Homepage/Homepage";
 import PostAuction from "./Objects/PostAuction/PostAuction";
+import SignUp from "./Objects/SignUp/SignUp";
+import LogIn from "./Objects/LogIn/LogIn";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Routes>
           <Route path='/' element={<Homepage/>} />
           <Route path='/PostAuction' element={<PostAuction/>} />
+          <Route path='/LogIn' element={<LogIn/>} />
+          <Route path='/SignUp' element={<SignUp/>} />
         </Routes>
       </Router>
     </div>
