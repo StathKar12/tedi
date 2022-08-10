@@ -1,0 +1,31 @@
+.LogIn {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    padding-top: 100px;
+  }
+  
+  .LogIn input,
+  button {
+    width: 500px;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    margin: 15px;
+  }
+  
+  .LogIn button {
+    background-color: black;
+    color: white;
+  }
+
+  .LogIn button:hover {
+    cursor: pointer;
+    background-color: maroon;
+}
+  
+  .LogIn input {
+    border: 2px solid black;
+  }
