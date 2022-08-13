@@ -12,8 +12,12 @@ app.use(cors());
 //Routers
 const AuctionRouter = require("./routes/Auctions");
 app.use("/Auctions", AuctionRouter);
+
 const UserRouter = require("./routes/Users");
 app.use("/Users", UserRouter);
+
+const CategoryRouter = require("./routes/Categories");
+app.use("/Categories", CategoryRouter);
 
 db.sequelize.sync().then(() =>
 { 

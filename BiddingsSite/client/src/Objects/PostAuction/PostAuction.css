@@ -18,7 +18,16 @@
     font-size: 20px;
     
 }
-  
+
+.PostAuctionCSS #Categories {
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding-left: 10px;
+    font-size: 20px;
+    
+}
 .PostAuctionCSS button {
     margin-top: 15px;
     height: 40px;

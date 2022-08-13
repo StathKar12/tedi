@@ -1,38 +1,15 @@
+span{
+    font-size: medium;
+    font-weight: bold;
+    color :black(75, 75, 114);
+    font-size: xx-large;
+}
 
-.Auction {
-    width: 400px;
-    height: 200px;
+.Welcome{
+    height: auto;
     border-radius: 10px;
     display: grid;
     margin-top: 50px;
-    box-shadow: black
-  }
-  
-  .Auction:hover {
     box-shadow: black;
-    cursor: pointer;
-  }
-  .Auction .title {
-    border-bottom: 1px solid rgb(211, 211, 211);
-    background-color: burlywood;
-    text-overflow: ellipsis;
-    display: grid;
-    place-content: center;
-    color: white;
-    overflow:auto;
-
-  }
-  
-  .Auction .body {
-    overflow:auto; 
-    height: auto;
-    display: grid;
-    place-content: center;
-  }
-  
-  .Auction .footer {
-    overflow:auto; 
-    height: auto;
-    display: grid;
-    place-content: left;
-  }
+    font-weight: bold;
+}

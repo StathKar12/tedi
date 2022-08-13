@@ -2,15 +2,21 @@ import React from 'react';
 import axios from "axios";
 import { useState } from "react";
 import "./LogIn.css"
+import { useNavigate } from "react-router-dom";
 
 function LogIn() {
-const [username, setUsername] = useState("");
-const [password, setPassword] = useState("");
+
+  let navigate=useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const login = () => {
     const data = {username: username, password: password};
     axios.post("http://localhost:8080/Users/login", data).then((res) => {
       console.log(res.data);
+      if(res.data==="Logged In")
+        navigate("/");
     });
   };
   return (

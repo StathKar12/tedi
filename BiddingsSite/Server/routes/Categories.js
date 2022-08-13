@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { Auctions } = require("../models");
+const { Categories } = require("../models");
 
 router.get("/", async (req, res) => {
-    const listOfAuctions = await Auctions.findAll();
+    const listOfAuctions = await Categories.findAll();
     res.json(listOfAuctions);
 });
 
 router.post("/", async (req, res) => {
-    const auction = req.body;
-    await Auctions.create(auction).then(result => res.json(result));
+    const category = req.body;
+    await Categories.create(category);
+    res.json(category);
 });
 
 module.exports = router;

@@ -3,8 +3,13 @@ import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import axios from "axios";
 import "./SignUp.css";
+import { useNavigate } from "react-router-dom";
+
 
 function SignUp() {
+    
+    let navigate=useNavigate();
+
     const initialValues={
         username:"",
         password:"",
@@ -13,9 +18,10 @@ function SignUp() {
         username: Yup.string().max(18).min(6).required("Username is required to Sign Up"),
         password: Yup.string().max(18).min(6).required("Password is required to Sign Up"),
     });
-const onSubmit = (data) => {
-    axios.post("http://localhost:8080/Users",data).then(() => {
+    const onSubmit = (data) => {
+        axios.post("http://localhost:8080/Users",data).then(() => {
         console.log(data);
+        navigate("/");
     });
 };
 
