@@ -5,36 +5,40 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        Title: {
+        Name: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        Text: {
+        Description: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         Currently: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         Buy_Price: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.INTEGER,
+            allowNull: true,
         },
         First_Bid: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         Number_of_Bids: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        Started: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        Bids: {
+        Ends: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        Username: {
-            type: DataTypes.STRING,
+        Seller: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
     });
@@ -42,6 +46,16 @@ module.exports = (sequelize, DataTypes) => {
         Auctions.hasMany(models.Categories, {
             onDelete: "cascade",
         })
+        Auctions.hasMany(models.Bids, {
+            onDelete: "cascade",
+        })
+        Auctions.hasMany(models.Files, {
+            onDelete: "cascade",
+        })
+        Auctions.hasOne(models.Location, {
+            onDelete: "cascade",
+        })
+
     }
     return Auctions;
 }

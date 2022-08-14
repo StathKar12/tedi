@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mui/x-date-pickers": "^5.0.0-beta.5",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
@@ -14,6 +15,9 @@
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-multi-select-component": "^4.3.3",
+    "react-multiple-image-input": "^1.0.0",
+    "react-native": "^0.69.4",
+    "react-native-web": "^0.18.7",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.4.0",

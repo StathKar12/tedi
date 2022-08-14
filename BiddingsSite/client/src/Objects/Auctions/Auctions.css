@@ -1,7 +1,7 @@
 
 .Auction {
     width: 400px;
-    height: 200px;
+    height: auto;
     border-radius: 10px;
     display: grid;
     margin-top: 50px;
@@ -19,20 +19,28 @@
     display: grid;
     place-content: center;
     color: white;
-    overflow:auto;
+    /* overflow:auto; */
 
   }
   
   .Auction .body {
-    overflow:auto; 
     height: auto;
+    overflow:auto; 
     display: grid;
     place-content: center;
   }
   
-  .Auction .footer {
-    overflow:auto; 
-    height: auto;
-    display: grid;
-    place-content: left;
+.footer {
+   height:50px; 
+   overflow:auto;  
+}
+
+.footer #left{
+    float: left;
+    font-size: medium;
+  }
+  
+.footer #right{
+    float: right;
+    font-size: medium;
   }

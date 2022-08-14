@@ -19,6 +19,15 @@ app.use("/Users", UserRouter);
 const CategoryRouter = require("./routes/Categories");
 app.use("/Categories", CategoryRouter);
 
+const BidsRouter = require("./routes/Bids");
+app.use("/Bids", BidsRouter);
+
+const LocationRouter = require("./routes/Location");
+app.use("/Location", LocationRouter);
+
+const UploadRouter = require("./routes/Upload");
+app.use("/Upload", UploadRouter);
+
 db.sequelize.sync().then(() =>
 { 
     app.listen(port,()=>

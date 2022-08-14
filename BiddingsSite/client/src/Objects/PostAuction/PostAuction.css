@@ -28,6 +28,10 @@
     font-size: 20px;
     
 }
+
+.PostAuctionCSS #Time {
+    font-style: bokld;
+}
 .PostAuctionCSS button {
     margin-top: 15px;
     height: 40px;
