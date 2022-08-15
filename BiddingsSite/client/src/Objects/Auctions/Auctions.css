@@ -26,7 +26,7 @@
   .Auction .body {
     height: auto;
     overflow:auto; 
-    display: grid;
+    /* display: grid; */
     place-content: center;
   }
   
@@ -44,3 +44,61 @@
     float: right;
     font-size: medium;
   }
+
+.cropped1 {
+  width: 350px; 
+  height: 200px; 
+  object-fit: cover;
+  border: 5px solid burlywood;
+}
+.cropped2 {
+  width: 350px; 
+  height: 300px; 
+  object-fit: cover;
+  object-position: 20% 10%; 
+  display: grid;
+  border: 5px solid burlywood;
+}
+
+.CompleteAuction{
+  height: auto;
+  width: 400px;
+  overflow:auto;
+
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.Photos{
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 60px;
+  float :right;
+  width: auto;
+  height: auto;
+  overflow: auto;
+  display: grid;
+}
+
+.Photos .File{
+  overflow: auto;
+  float: left;
+}
+
+.AuctionTitle{
+  margin-left: 170px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.CompleteBody{
+  /* float: center; */
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-left: 100px;
+  margin-bottom: 10px;
+}

@@ -5,6 +5,24 @@ let formidable = require('formidable');
 const crypto = require('crypto')
 let fs = require('fs');
 
+
+router.get('/byid/:id',async (req, res) =>{
+  const id = req.params.id;
+  const uploads = await Files.findAll({where :{ AuctionId:id }})
+  res.json(uploads)
+})
+// router.get('/all',async (req, res) =>{
+//   console.log(req.body.req);
+//   let array=[];
+//   array[0]="asd";
+//   array.forEach(element => {
+//     console.log(element);
+//   });
+//   // const uploads = await Files.findAll({where :{ AuctionId:id }})
+//   // res.json(uploads)
+// })
+
+
 router.post("/:id",async (req, res) => {
 
   const id = req.params.id;
@@ -13,7 +31,7 @@ router.post("/:id",async (req, res) => {
   val+= '.jpg';
   
   form.parse(req, function (error, fields, file) {
-    let newpath = '../UploadedItems/';
+    let newpath = '../client/src/UploadedItems/';
     let filepath = file.fileupload.filepath;
     newpath += val;
     fs.rename(filepath, newpath, function () {});

@@ -99,7 +99,6 @@ function PostAuction(){
                         const formData = new FormData();
                         formData.append('fileupload', image);
                         axios.post(`http://localhost:8080/Upload/${res.data.id}`, formData).then((response) => {
-                          console.log(response.data);
                         });
                      });
                 }
@@ -125,6 +124,17 @@ function PostAuction(){
         Latitude: Yup.number(),
     });
     
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    }    
+    today = yyyy+'-'+mm+'-'+dd+"T"+today.getHours()+":"+today.getMinutes();
     return(
         <div className="PostAuction">
             <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}> 
@@ -148,7 +158,7 @@ function PostAuction(){
                     
                     <label>Starts (Ex. 01/02/2022 , 12-00 PM): </label>
                     <ErrorMessage name="Started" component="h1"/>
-                    <Field type="datetime-local" id="PostAuctionForm" name="Started"/>
+                    <Field type="datetime-local" id="PostAuctionForm" name="Started" min={today} max="2030-06-14T00:00"/>   
                     
                     <label>Ends (Ex. 01/02/2022 , 01-00 AM): </label>
                     <ErrorMessage name="Ends" component="h1"/>

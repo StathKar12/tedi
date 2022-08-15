@@ -6,6 +6,7 @@ import Auctions from "./Objects/Auctions/Auctions";
 import PostAuction from "./Objects/PostAuction/PostAuction";
 import SignUp from "./Objects/SignUp/SignUp";
 import LogIn from "./Objects/LogIn/LogIn";
+import Auction  from "./Objects/Auctions/Auction";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path='/' element={<Homepage/>} />
           <Route path='/Auctions' element={<Auctions/>} />
           <Route path='/PostAuction' element={<PostAuction/>} />
+          <Route path='/Auction/:Id' element={<Auction/>} />
           <Route path='/LogIn' element={<LogIn/>} />
           <Route path='/SignUp' element={<SignUp/>} />
         </Routes>

@@ -7,6 +7,12 @@ router.get("/", async (req, res) => {
     res.json(listOfLocations);
 });
 
+router.get('/:id',async (req, res) =>{
+    const id = req.params.id;
+    const location = await Location.findAll({where :{ AuctionId:id }})
+    res.json(location)
+  })
+  
 router.post("/", async (req, res) => {
     const Location_t = req.body;
     await Location.create(Location_t);
