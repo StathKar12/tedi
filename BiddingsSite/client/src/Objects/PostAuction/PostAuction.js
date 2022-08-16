@@ -7,8 +7,7 @@ import "./PostAuction.css";
 import Select from "react-select";
 
 const options =
- [  {multiValue: true},
-    { label: "Tech ", value: "Tech" },
+ [  { label: "Tech ", value: "Tech" },
     { label: "Electronics ", value: "Electronics" },
     { label: "Fashion ", value: "Fashion" },
     { label: "Health & Beauty ", value: "Health & Beauty" },
@@ -64,6 +63,7 @@ function PostAuction(){
         Time: "12:34"
     };
 
+    
     const onSubmit=(data)=>{
         if(selected.length>0)
         {
@@ -134,7 +134,9 @@ function PostAuction(){
     if(mm<10){
         mm='0'+mm
     }    
-    today = yyyy+'-'+mm+'-'+dd+"T"+today.getHours()+":"+today.getMinutes();
+
+    today = yyyy+'-'+mm+'-'+"01"+"T"+today.getHours()+":"+today.getMinutes();
+    console.log(today);
     return(
         <div className="PostAuction">
             <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}> 

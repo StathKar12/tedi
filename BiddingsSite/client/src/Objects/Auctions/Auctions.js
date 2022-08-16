@@ -13,17 +13,25 @@ function Auctions() {
     else
         return <h2> </h2>
   }
-
-  let [image, setImage] = useState();
-  
-
-
   const renderImage=(value)=>{
     if(typeof value.FileName !=="undefined"){
         return <img className="cropped2" src={require('./../../UploadedItems/'+value.FileName)} alt=""/>;
     }
     return <h1>  </h1>
   }
+  const renderIfNotExpired=(Auction)=>{
+
+    if(typeof Auction.Active!=undefined)
+    {
+       if(Auction.Active===0){
+        return <h1>This Auction Has Not Yet Started You Can Bid Soon!</h1>
+       }else if(Auction.Active===-1){
+        return <h1>This Auction Has Expired You Can No Longer Bid!</h1>
+       }
+       return <h3>Open For Bids</h3>
+    }
+    return <h1> </h1>
+  };
 
     let navigate=useNavigate();
     const [listOfAuctions, setlistOfAuctions] = useState([]);
@@ -33,7 +41,7 @@ function Auctions() {
         setlistOfAuctions(res.data);
         });
     },[]);
-
+    
     return (
       <div>
        {listOfAuctions.map((value,key) => {
@@ -44,6 +52,7 @@ function Auctions() {
                   {renderBuyPrice(value.Buy_Price)} 
                   {renderImage(value)}
                   <h2>Current Bid :{value.Currently} </h2>
+                  {renderIfNotExpired(value)}
                 </div>
                 <div className="footer">
                   <h2 id="left">Starts : {value.Started.replace("T", " At: ")}</h2>       

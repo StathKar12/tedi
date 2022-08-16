@@ -11,17 +11,6 @@ router.get('/byid/:id',async (req, res) =>{
   const uploads = await Files.findAll({where :{ AuctionId:id }})
   res.json(uploads)
 })
-// router.get('/all',async (req, res) =>{
-//   console.log(req.body.req);
-//   let array=[];
-//   array[0]="asd";
-//   array.forEach(element => {
-//     console.log(element);
-//   });
-//   // const uploads = await Files.findAll({where :{ AuctionId:id }})
-//   // res.json(uploads)
-// })
-
 
 router.post("/:id",async (req, res) => {
 

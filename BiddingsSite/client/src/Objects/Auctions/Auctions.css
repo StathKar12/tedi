@@ -62,21 +62,20 @@
 
 .CompleteAuction{
   height: auto;
-  width: 400px;
-  overflow:auto;
-
+  overflow-wrap: break-word;
+  width: 400px;  
   margin-right: 10px;
   margin-top: 10px;
   margin-left: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 100px;
 }
 
 .Photos{
   margin-right: 10px;
   margin-top: 10px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   margin-bottom: 60px;
-  float :right;
+  float :left;
   width: auto;
   height: auto;
   overflow: auto;
@@ -89,16 +88,29 @@
 }
 
 .AuctionTitle{
-  margin-left: 170px;
+  margin-left: 120px;
   margin-right: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.CompleteBody{
-  /* float: center; */
-  margin-right: 10px;
+
+.TryLeft{
+  float: left;
+  display: flex;
+}
+
+.PostBid{
   margin-top: 10px;
-  margin-left: 100px;
-  margin-bottom: 10px;
+  float: left;
+}
+.PostBid #PostAuctionForm{
+  float: center;
+  margin-left: 150px;
+  width: 200px;
+}
+
+.PostBid #PostAuctionForm2{
+  float: left;
+  width: 200px;
 }
