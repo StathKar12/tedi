@@ -16,6 +16,13 @@ function Auction(){
     const [errorMessage, setErrorMessage] = useState('');
     let navigate=useNavigate();
 
+    const fun2=(value,key)=>{try {return renderImage(value,key)}catch(err){return <h2> </h2>}}
+    const renderImage=(file,key)=>{
+        
+        return(<div key={key} >
+            <img className="cropped2" src={require('./../../UploadedItems/'+file.FileName)} alt=""/>  
+        </div>)
+    }
     const onSubmit=(data)=>{
         if(Auction.Number_of_Bids===0 && Number(data.Bid)<Number(Auction.First_Bid)){
             setErrorMessage(`For the First Bid you must place at least: ${Auction.First_Bid} $`);
@@ -96,9 +103,7 @@ function Auction(){
             <div className='Photos'>
                 {files.map((file,key)=>{
                     return (
-                    <div key={key} >
-                      <img className="cropped2" src={require('./../../UploadedItems/'+file.FileName)} alt=""/>  
-                    </div>
+                        fun2(file,key)
                     );
                 })}
             </div>

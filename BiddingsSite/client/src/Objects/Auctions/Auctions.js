@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 
 function Auctions() {
+  
+  const fun2=(value)=>{try {return renderImage(value)}catch(err){return <h2> </h2>}}
 
   const renderBuyPrice = (Buy_Price) => {
     if(Buy_Price!=null)
@@ -50,7 +52,7 @@ function Auctions() {
                 <div className="title"> <span>{value.Name}</span> </div>
                 <div className="body" >  
                   {renderBuyPrice(value.Buy_Price)} 
-                  {renderImage(value)}
+                  {fun2(value)}
                   <h2>Current Bid :{value.Currently} </h2>
                   {renderIfNotExpired(value)}
                 </div>
