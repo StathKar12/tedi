@@ -49,15 +49,15 @@ router.get('/byid/:id',async (req, res) =>{
             var start = (new Date(Auction.Started.replace(" At: ", "T"))).getTime();
             var end = (new Date(Auction.Ends.replace(" At: ", "T"))).getTime();
             var today = (new Date(getCurrentDate())).getTime();
-            if(today<start && Auction.Active!==0)
+            if(today<start)
             {
                 Auction.Active=0;   //not yet started
             }
-            else if(today>end && Auction.Active!==-1)
+            else if(today>end)
             {
                 Auction.Active=-1;  //Expired
             }
-            else if(Auction.Active!==1){
+            else{
                 Auction.Active=1; //Ok
             }
         }
@@ -85,16 +85,16 @@ router.get('/all',async (req, res) =>{
                 var start = (new Date(element.Started.replace(" At: ", "T"))).getTime();
                 var end = (new Date(element.Ends.replace(" At: ", "T"))).getTime();
                 var today = (new Date(getCurrentDate())).getTime();
-                if(today<start && listofAuctions[index].dataValues.Active!==0)
+                if(today<start)
                 {
                     listofAuctions[index].dataValues.Active=0;   //not yet started
                     Auctions.update({Active:0},{ where: { id: listofAuctions[index].dataValues.id } });
                 }
-                else if(today>end && listofAuctions[index].dataValues.Active!==-1)
+                else if(today>end)
                 {
                     listofAuctions[index].dataValues.Active=-1;  //Expired
                     Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
-                }else if(listofAuctions[index].dataValues.Active!==1){
+                }else{
                     listofAuctions[index].dataValues.Active=1;  //ok
                     Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
                 }

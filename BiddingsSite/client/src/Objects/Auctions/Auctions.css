@@ -121,3 +121,15 @@
   margin-left: 210px;
   width: 200px;
 }
+
+.body{
+  float:left;
+}
+
+.bidbutton {
+  border: none;
+  background-color: black;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+}
