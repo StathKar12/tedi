@@ -14,6 +14,7 @@ function Auction(){
     const [files,setFiles]=useState([]);
     const [location,setLocation]=useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [Bids, setBids] = useState([]);
     let navigate=useNavigate();
 
     const fun2=(value,key)=>{try {return renderImage(value,key)}catch(err){return <h2 key={key}> </h2>}}
@@ -48,7 +49,7 @@ function Auction(){
     const renderBuyPrice = () => {
         if(Auction.Buy_Price!=null)
             return <div> <h2><label id="PostAuctionForm">Buy Now For {Auction.Buy_Price}: </label></h2>
-                    <button type="button" onClick={BuyNow}>Click To Buy Now!</button></div>;
+                    <button className='bidbutton' type="button" onClick={BuyNow}>Click To Buy Now!</button></div>;
             else
             return <h2> </h2>
     }
@@ -75,7 +76,7 @@ function Auction(){
                             <ErrorMessage id="PostAuctionForm"  name="Bid" component="h1"/>
                             {errorMessage && <div > <h1>{errorMessage} </h1></div>}
                             <Field id="PostAuctionForm" name="Bid" placeholder="(Ex.200)"/>
-                            <div><button type="submit">Bid</button></div>
+                            <div><button className='bidbutton' type="submit">Bid</button></div>
                         </Form>
                     </Formik>
                     {renderBuyPrice()}
@@ -117,7 +118,7 @@ function Auction(){
                     );
                 })}
             </div>
-            <div>
+            <div className='body'>
                 <h3>Number of bids :{Auction.Number_of_Bids}</h3>
                 <h3>Country : {location.Country} </h3>
                 <h3>Location : {location.Location} , Cords : ({location.Longtitude},{location.atitude})</h3>
