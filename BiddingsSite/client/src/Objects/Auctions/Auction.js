@@ -16,7 +16,7 @@ function Auction(){
     const [errorMessage, setErrorMessage] = useState('');
     let navigate=useNavigate();
 
-    const fun2=(value,key)=>{try {return renderImage(value,key)}catch(err){return <h2> </h2>}}
+    const fun2=(value,key)=>{try {return renderImage(value,key)}catch(err){return <h2 key={key}> </h2>}}
     const renderImage=(file,key)=>{
         
         return(<div key={key} >
@@ -35,15 +35,21 @@ function Auction(){
 
     };
     
-    const BuyNow=(data)=>{
+    const  BuyNow=()=>{
+        if(typeof Auction.Active==="undefined")return;
         console.log("You Bought Now");
-        navigate(0);
+        Auction.Number_of_Bids+=1;
+        Auction.Active=2;
+        Auction.Currently=Auction.Buy_Price;
+        axios.post(`http://localhost:8080/Auctions/update`,Auction).then((res) =>{
+            navigate(0);
+        });
     };
     const renderBuyPrice = () => {
         if(Auction.Buy_Price!=null)
             return <div> <h2><label id="PostAuctionForm">Buy Now For {Auction.Buy_Price}: </label></h2>
                     <button type="button" onClick={BuyNow}>Click To Buy Now!</button></div>;
-        else
+            else
             return <h2> </h2>
     }
     const initialValues={
@@ -51,17 +57,21 @@ function Auction(){
     };
 
     const renderIfNotExpired=()=>{
+
         if(typeof Auction.Active!=undefined)
         {
            if(Auction.Active===0){
             return <h1>This Auction Has Not Yet Started You Can Bid Soon!</h1>
-           }else if(Auction.Active===-1){
+           }else if(Auction.Active===2){
+                return <h1> SOLD FOR :{Auction.Currently}</h1>
+            }else if(Auction.Active===-1){
             return <h1>This Auction Has Expired You Can No Longer Bid!</h1>
            }
            return <div className="PostBid">
                     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
                         <Form >
-                            <h2><label id="PostAuctionForm">Bid Amount : </label></h2>
+                            <h2 id="PostAuctionForm1">Currently :{Auction.Currently}</h2>
+                            <h2><label id="PostAuctionForm2"> Bid Now : </label></h2>
                             <ErrorMessage id="PostAuctionForm"  name="Bid" component="h1"/>
                             {errorMessage && <div > <h1>{errorMessage} </h1></div>}
                             <Field id="PostAuctionForm" name="Bid" placeholder="(Ex.200)"/>
@@ -77,7 +87,7 @@ function Auction(){
     useEffect(() => {
         axios.get(`http://localhost:8080/Auctions/byid/${Id}`).then((res)=>{
             
-            res.data.Started=res.data.Ends.replace("T", " At: ");
+            res.data.Started=res.data.Started.replace("T", " At: ");
             res.data.Ends=res.data.Ends.replace("T", " At: ");
            
             setAuction(res.data);
@@ -108,7 +118,6 @@ function Auction(){
                 })}
             </div>
             <div>
-                <h2>Current price :{Auction.Currently} </h2>
                 <h3>Number of bids :{Auction.Number_of_Bids}</h3>
                 <h3>Country : {location.Country} </h3>
                 <h3>Location : {location.Location} , Cords : ({location.Longtitude},{location.atitude})</h3>
@@ -118,7 +127,7 @@ function Auction(){
                 <h3>Description:</h3>       
                 <h3 className='desc'>{Auction.Description}</h3>
             </div>
-        </div>
+        </div> 
         {renderIfNotExpired()}
     </div>
     );

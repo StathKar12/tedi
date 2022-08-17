@@ -31,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         Active:{
             type: DataTypes.INTEGER,
-            default:1,
         },
         Started: {
             type: DataTypes.STRING,

@@ -110,7 +110,14 @@
   width: 200px;
 }
 
+.PostBid #PostAuctionForm1{
+  float: center;
+  margin-left: 190px;
+  width: 200px;
+}
+
 .PostBid #PostAuctionForm2{
-  float: left;
+  float: center;
+  margin-left: 210px;
   width: 200px;
 }

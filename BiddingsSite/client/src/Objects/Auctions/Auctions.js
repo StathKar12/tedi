@@ -29,6 +29,8 @@ function Auctions() {
         return <h1>This Auction Has Not Yet Started You Can Bid Soon!</h1>
        }else if(Auction.Active===-1){
         return <h1>This Auction Has Expired You Can No Longer Bid!</h1>
+       }else if(Auction.Active===2){
+        return <h1>SOLD FOR : {Auction.Currently}</h1>
        }
        return <h3>Open For Bids</h3>
     }

@@ -76,7 +76,8 @@ function PostAuction(){
                 Number_of_Bids:0,
                 Started:data.Started,
                 Ends:data.Ends,
-                Seller:1 //To fix with user id that makes the auction
+                Seller:1, //To fix with user id that makes the auction
+                Active:1
             }
             if(data.Buy_Price.length>0){
                 input.Buy_Price=data.Buy_Price;
@@ -136,7 +137,6 @@ function PostAuction(){
     }    
 
     today = yyyy+'-'+mm+'-'+"01"+"T"+today.getHours()+":"+today.getMinutes();
-    console.log(today);
     return(
         <div className="PostAuction">
             <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}> 
