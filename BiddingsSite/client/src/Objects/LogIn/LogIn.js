@@ -14,9 +14,10 @@ function LogIn() {
   const login = () => {
     const data = {username: username, password: password};
     axios.post("http://localhost:8080/Users/login", data).then((res) => {
-      console.log(res.data);
-      if(res.data==="Logged In")
-        navigate("/");
+
+    if (res.data.error) alert(res.data.error);
+    sessionStorage.setItem("AccT", res.data);
+
     });
   };
   return (

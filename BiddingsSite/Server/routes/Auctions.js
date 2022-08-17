@@ -16,30 +16,11 @@ const getCurrentDate=()=>{
     today = yyyy+'-'+mm+'-'+dd+"T"+today.getHours()+":"+(today.getMinutes()<10?'0':'')+today.getMinutes();
     return today;
 }
-// router.get("/", async (req, res) => {
-//     const listOfAuctions = await Auctions.findAll();
-//     listOfAuctions.some((element,index) => {
-//         if(listOfAuctions[index].dataValues!=null){
-//             if(listofAuctions[index].dataValues.Active!==2){
-//             var start = (new Date(element.Started.replace(" At: ", "T"))).getTime();
-//             var end = (new Date(element.Ends.replace(" At: ", "T"))).getTime();
-//             var today = (new Date(getCurrentDate())).getTime();
-//             if(today<start)
-//             {
-//                 listOfAuctions[index].dataValues.Active=0;   //not yet started
-//             }
-//             else if(today>end)
-//             {
-//                 listOfAuctions[index].dataValues.Active=-1;  //Expired
-//             }
-//             else {
-//                 listOfAuctions[index].dataValues.Active=1; //Ok
-//             }
-//         }
-//         }
-//     });
-//     res.json(listOfAuctions);
-// });
+
+router.get("/", async (req, res) => {
+    const listOfAuctions = await Auctions.findAll();
+    res.json(listOfAuctions);
+})
 
 router.get('/byid/:id',async (req, res) =>{
     const id = req.params.id;
@@ -49,15 +30,15 @@ router.get('/byid/:id',async (req, res) =>{
             var start = (new Date(Auction.Started.replace(" At: ", "T"))).getTime();
             var end = (new Date(Auction.Ends.replace(" At: ", "T"))).getTime();
             var today = (new Date(getCurrentDate())).getTime();
-            if(today<start && Auction.Active!==0)
+            if(today<start)
             {
                 Auction.Active=0;   //not yet started
             }
-            else if(today>end && Auction.Active!==-1)
+            else if(today>end)
             {
                 Auction.Active=-1;  //Expired
             }
-            else if(Auction.Active!==1){
+            else{
                 Auction.Active=1; //Ok
             }
         }
@@ -85,16 +66,16 @@ router.get('/all',async (req, res) =>{
                 var start = (new Date(element.Started.replace(" At: ", "T"))).getTime();
                 var end = (new Date(element.Ends.replace(" At: ", "T"))).getTime();
                 var today = (new Date(getCurrentDate())).getTime();
-                if(today<start && listofAuctions[index].dataValues.Active!==0)
+                if(today<start)
                 {
                     listofAuctions[index].dataValues.Active=0;   //not yet started
                     Auctions.update({Active:0},{ where: { id: listofAuctions[index].dataValues.id } });
                 }
-                else if(today>end && listofAuctions[index].dataValues.Active!==-1)
+                else if(today>end)
                 {
                     listofAuctions[index].dataValues.Active=-1;  //Expired
                     Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
-                }else if(listofAuctions[index].dataValues.Active!==1){
+                }else{
                     listofAuctions[index].dataValues.Active=1;  //ok
                     Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
                 }

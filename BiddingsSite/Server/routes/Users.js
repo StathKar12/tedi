@@ -25,7 +25,8 @@ router.post("/login", async (req, res) => {
     bcrypt.compare(password, user.password).then((match) => {
         if (!match) res.json({error: "Wrong Password"});
 
-        res.json("Logged In");
+        const AccT = sign({username: user.username, id: user.id}, "JQ1mFJsoey");
+        res.json(AccT);
     });
 });
 
