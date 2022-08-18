@@ -9,7 +9,21 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        Rating:{
+            type: DataTypes.INTEGER,
+            allowNull:true,
+        }
     });
-
+    Users.associate = (models) => {
+        Users.hasMany(models.Auctions, {
+            onDelete: "cascade",
+        })
+        Users.hasMany(models.Bids, {
+            onDelete: "cascade",
+        })
+        Users.hasOne(models.Location, {
+            onDelete: "cascade",
+        })
+    }
     return Users;
 }

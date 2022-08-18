@@ -1,7 +1,10 @@
+const e = require('express');
 const express = require('express');
 const router = express.Router();
-const { Auctions ,Files} = require("../models");
+
+const { Auctions ,Files , Categories} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
+
 
 const getCurrentDate=()=>{
     var today = new Date();
@@ -22,6 +25,8 @@ router.get("/", async (req, res) => {
     const listOfAuctions = await Auctions.findAll();
     res.json(listOfAuctions);
 })
+
+
 
 router.get('/byid/:id',async (req, res) =>{
     const id = req.params.id;
@@ -51,9 +56,30 @@ router.get('/byid/:id',async (req, res) =>{
 
 router.get('/all',async (req, res) =>{
     
-    const listofAuctions = await Auctions.findAll();
+
+    var listofAuctions =[];
+    var listofCategories=[];
+    
+    if(typeof req.query.selected !=="undefined" )
+    {
+        const categories=req.query.selected;
+        let cats=[];
+        categories.some((element)=>{
+            cats.push(element.replace("{","").replace("}","").split(",")[0].replace('"',"").replace(' "',"").split('":"')[1])
+        });
+        listofCategories = await Categories.findAll({where:{CategoryName: cats}});
+        let auctionids=[];
+        listofCategories.some((element)=>{
+            auctionids.push(element.AuctionId);
+        });
+        listofAuctions=await Auctions.findAll({where:{id:auctionids}});
+    }
+    else{
+        listofAuctions= await Auctions.findAll();
+    }
     const listofFiles = await Files.findAll();
-    const oldlistofFiles=listofAuctions;
+
+    
     listofAuctions.some((element,index) => {
         listofFiles.some((element2)=>{
             if(element.id===element2.AuctionId){

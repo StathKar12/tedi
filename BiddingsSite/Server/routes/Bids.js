@@ -9,8 +9,15 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
     const bid = req.body;
-    await Bids.create(bid);
-    res.json(bid);
+    console.log(bid);
+    var re;
+    try{
+        re=await Bids.create(bid);
+    }
+    catch(err){
+        console.log(err);
+    }
+    res.json(re);
 });
 
 module.exports = router;

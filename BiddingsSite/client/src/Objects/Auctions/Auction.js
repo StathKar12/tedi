@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import React from 'react';
 import { useEffect, useState  } from "react";
 import { useNavigate,useParams } from "react-router-dom";
@@ -6,7 +6,21 @@ import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import "./Auctions.css"
 
+const getToday=()=>{
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    } 
+    if(mm<10){
+        mm='0'+mm
+    }    
 
+    today = yyyy+'-'+mm+'-'+dd+"T"+today.getHours()+":"+today.getMinutes();
+    return today;
+}
 function Auction(){
 
     let {Id} = useParams();
@@ -25,13 +39,38 @@ function Auction(){
         </div>)
     }
     const onSubmit=(data)=>{
+        if(typeof data.Bid==="undefined")return;
         if(Auction.Number_of_Bids===0 && Number(data.Bid)<Number(Auction.First_Bid)){
             setErrorMessage(`For the First Bid you must place at least: ${Auction.First_Bid} $`);
         }
+        else if(Auction.Currently >= data.Bid){
+            setErrorMessage(`Please bid more than the current price`);
+        }
         else
         {
-            console.log("YOU PLACED YOUR BID");
-            navigate(0);
+           if(typeof Auction.Number_of_Bids!=="undefined"){
+                const inputBid=
+                {
+                    Time:getToday(),
+                    Amount:data.Bid,
+                    AuctionId:Auction.id,
+                    UserId:0 //Perimeno ton stathi
+                }
+                // const inputLocation=
+                // {
+                //     Country:USERCOUNTRY PERIMENO STATHI
+                //     Location:USERLOCATION PERIMENO STATHI
+                //     UserId:USERID PERIMENO STATHI
+                // }
+                Auction.Number_of_Bids+=1;
+                Auction.Currently=data.Bid;
+                axios.post(`http://localhost:8080/Auctions/update`,Auction).then((res) =>{
+                    axios.post("http://localhost:8080/Bids/",inputBid).then((res) =>{
+                        navigate(0);
+                    });
+                });
+            }
+
         } 
 
     };
@@ -86,6 +125,7 @@ function Auction(){
     };
 
     useEffect(() => {
+        console.log("AE");
         axios.get(`http://localhost:8080/Auctions/byid/${Id}`).then((res)=>{
             
             res.data.Started=res.data.Started.replace("T", " At: ");
@@ -100,7 +140,7 @@ function Auction(){
             setLocation(res3.data[0]);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    },[Bids]);
 
 
     const validationSchema = Yup.object().shape({

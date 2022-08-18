@@ -1,11 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
-    const Bids = sequelize.define("Bids", {
-        BidderID: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },        
+    const Bids = sequelize.define("Bids", {    
         Time: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         Amount: {

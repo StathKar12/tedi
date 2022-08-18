@@ -1,11 +1,27 @@
-import React from "react"
+import React from "react";
 import axios from "axios";
 import "./Auctions.css"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import {Formik,Form,Field,ErrorMessage} from "formik";
+
+const options =
+ [  { label: "Tech ", value: "Tech" },
+    { label: "Electronics ", value: "Electronics" },
+    { label: "Fashion ", value: "Fashion" },
+    { label: "Health & Beauty ", value: "Health & Beauty" },
+    { label: "Home & Gsarden ", value: "Home & Garden " },
+    { label: "Art ", value: "Art" },
+    { label: "Motors ", value: "Motors" },
+    { label: "Industrial equipment ", value: "Industrial equipment" },
+  ];
 
 
 function Auctions() {
+  
+  const [selected, setSelected] = useState([]);
+  const [renderbycat,setcat]=useState([])
   
   const fun2=(value)=>{try {return renderImage(value)}catch(err){return <h2> </h2>}}
 
@@ -39,15 +55,22 @@ function Auctions() {
 
     let navigate=useNavigate();
     const [listOfAuctions, setlistOfAuctions] = useState([]);
+    const [sendRequest ,setsendRequest] =useState();
 
     useEffect(() => {
-      axios.get("http://localhost:8080/Auctions/all").then((res) => {
+      axios.get("http://localhost:8080/Auctions/all",{
+        params: {selected}
+      }).then((res) => {
         setlistOfAuctions(res.data);
         });
-    },[]);
+    },[sendRequest]);
     
     return (
       <div>
+        <div className="Select"> 
+          <Select name={"Categories"} options={options} selected={selected} onChange={setSelected} isMulti={true} placeholder={"Categorical Search "}/>
+          <button  id="button" type="button" onClick={setsendRequest}>Click To Search!</button> 
+        </div>
        {listOfAuctions.map((value,key) => {
             return ( 
                <div className="Auction" key={key} onClick={()=>{navigate(`/Auction/${value.id}`)}}> 

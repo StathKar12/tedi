@@ -133,3 +133,14 @@
   color: white;
   font-weight: bold;
 }
+
+.Select{
+  margin-top: 20px;
+  display: grid;
+}
+.Select #button{
+  width: 100px;
+  background-color: black;
+  color: white;
+  margin-left: 150px;
+}
