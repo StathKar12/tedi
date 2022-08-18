@@ -2,7 +2,9 @@ import React from 'react';
 import axios from "axios";
 import { useState } from "react";
 import "./LogIn.css"
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+
+
 
 function LogIn() {
 
@@ -15,9 +17,14 @@ function LogIn() {
     const data = {username: username, password: password};
     axios.post("http://localhost:8080/Users/login", data).then((res) => {
 
-    if (res.data.error) alert(res.data.error);
-    sessionStorage.setItem("AccT", res.data);
-
+      if (res.data.error) {
+        alert(res.data.error);
+      } else {
+        sessionStorage.setItem("AccT", res.data);
+        
+        navigate("/");
+        alert("Successfully logged in");
+      };
     });
   };
   return (

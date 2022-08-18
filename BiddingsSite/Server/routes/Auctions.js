@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Auctions ,Files} = require("../models");
+const {validT} = require("../middlewares/authMiddleware");
 
 const getCurrentDate=()=>{
     var today = new Date();
@@ -86,7 +87,7 @@ router.get('/all',async (req, res) =>{
 })
   
 
-router.post("/", async (req, res) => {
+router.post("/",validT, async (req, res) => {
     const auction = req.body;
     await Auctions.create(auction).then(result => res.json(result));
 });

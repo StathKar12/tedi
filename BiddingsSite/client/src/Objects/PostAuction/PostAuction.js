@@ -98,26 +98,30 @@ function PostAuction(){
                 input.Buy_Price=data.Buy_Price;
             }
 
-            axios.post("http://localhost:8080/Auctions",input).then((res) =>{
-                selected.forEach(category =>{   
-                    axios.post("http://localhost:8080/Categories",{CategoryName:category.value,AuctionId:res.data.id});
-                });
-                const input2={Location:data.Location,Country:data.Country,AuctionId:res.data.id};
-                if(data.Longtitude.length>0 && data.Latitude.length>0)
-                {
-                    input2.Longtitude=data.Longtitude;
-                    input2.Latitude=data.Latitude;
-                }
-                axios.post("http://localhost:8080/Location",input2);
+            axios.post("http://localhost:8080/Auctions",input, {headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+                if (res.data.error){
+                    alert(res.data.error)
+                }else{
+                    selected.forEach(category =>{   
+                        axios.post("http://localhost:8080/Categories",{CategoryName:category.value,AuctionId:res.data.id});
+                    });
+                    const input2={Location:data.Location,Country:data.Country,AuctionId:res.data.id};
+                    if(data.Longtitude.length>0 && data.Latitude.length>0)
+                    {
+                        input2.Longtitude=data.Longtitude;
+                        input2.Latitude=data.Latitude;
+                    }
+                    axios.post("http://localhost:8080/Location",input2);
 
-                if(uploadedFiles.length>0){
-                    uploadedFiles.forEach(image =>{   
-                        const formData = new FormData();
-                        formData.append('fileupload', image);
-                        axios.post(`http://localhost:8080/Upload/${res.data.id}`, formData).then((response) => {
-                        });
-                     });
-                }
+                    if(uploadedFiles.length>0){
+                        uploadedFiles.forEach(image =>{   
+                            const formData = new FormData();
+                            formData.append('fileupload', image);
+                            axios.post(`http://localhost:8080/Upload/${res.data.id}`, formData).then((response) => {
+                            });
+                         });
+                    }
+                };
             });
  
             navigate("/");
