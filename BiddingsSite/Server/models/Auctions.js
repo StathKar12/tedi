@@ -40,10 +40,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        Seller: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
     });
     Auctions.associate = (models) => {
         Auctions.hasMany(models.Categories, {

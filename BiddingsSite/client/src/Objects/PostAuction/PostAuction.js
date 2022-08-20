@@ -29,7 +29,8 @@ const options =
         mm='0'+mm
     }    
 
-    today = yyyy+'-'+mm+'-'+"01"+"T"+today.getHours()+":"+today.getMinutes();
+    var t="01T";
+    today = yyyy+'-'+mm+'-'+t+today.getHours()+":"+today.getMinutes();
     return today;
 }
 

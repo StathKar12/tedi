@@ -4,7 +4,6 @@ import "./Auctions.css"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import {Formik,Form,Field,ErrorMessage} from "formik";
 
 const options =
  [  { label: "Tech ", value: "Tech" },
@@ -21,7 +20,7 @@ const options =
 function Auctions() {
   
   const [selected, setSelected] = useState([]);
-  const [renderbycat,setcat]=useState([])
+
   
   const fun2=(value)=>{try {return renderImage(value)}catch(err){return <h2> </h2>}}
 
@@ -39,14 +38,14 @@ function Auctions() {
   }
   const renderIfNotExpired=(Auction)=>{
 
-    if(typeof Auction.Active!=undefined)
+    if(typeof Auction.Active!="undefined")
     {
        if(Auction.Active===0){
-        return <h1>This Auction Has Not Yet Started You Can Bid Soon!</h1>
+        return <h2 className="SOLD">This Auction Has Not Yet Started You Can Bid Soon!</h2>
        }else if(Auction.Active===-1){
-        return <h1>This Auction Has Expired You Can No Longer Bid!</h1>
+        return <h2 className="exp" >This Auction Has Expired You Can No Longer Bid!</h2>
        }else if(Auction.Active===2){
-        return <h1>SOLD FOR : {Auction.Currently}</h1>
+        return <div className="SOLD" > SOLD FOR : {Auction.Currently}</div>
        }
        return <h3>Open For Bids</h3>
     }
@@ -79,8 +78,13 @@ function Auctions() {
                   {renderBuyPrice(value.Buy_Price)} 
                   {fun2(value)}
                   <h2>Current Bid :{value.Currently} </h2>
+                  <h2>Seller :{value.UserId}</h2>
                   {renderIfNotExpired(value)}
                 </div>
+                <div className="footer">
+                  <h2 id="left">Seller : {value.Seller}</h2>       
+                  <h2 id="right">Seller Rating :{value.SellerRating}</h2>
+                </div> 
                 <div className="footer">
                   <h2 id="left">Starts : {value.Started.replace("T", " At: ")}</h2>       
                   <h2 id="right">Ends :{value.Ends.replace("T", " At: ")}</h2>

@@ -23,7 +23,7 @@ function LogIn() {
         sessionStorage.setItem("AccT", res.data);
         
         navigate("/");
-        alert("Successfully logged in");
+        navigate(0);
       };
     });
   };

@@ -7,6 +7,7 @@ const validT= (req, res, next) => {
 
     try{
         const valid = verify(AccT, "JQ1mFJsoey");
+        res.userId = valid;
         if(valid) {
             return next();
         }

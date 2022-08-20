@@ -2,7 +2,7 @@ const e = require('express');
 const express = require('express');
 const router = express.Router();
 
-const { Auctions ,Files , Categories} = require("../models");
+const { Auctions ,Files , Categories , Users} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
 
 
@@ -51,6 +51,9 @@ router.get('/byid/:id',async (req, res) =>{
     }
     if(Auction!=null)await Auctions.update({Active:Auction.Active},{ where: { id: Auction.id } });
 
+    const usrs =await Users.findByPk(Auction.UserId);
+    Auction.dataValues.Seller=usrs.username;
+    Auction.dataValues.SellerRating=usrs.Rating;
     res.json(Auction);
 })
 
@@ -109,12 +112,26 @@ router.get('/all',async (req, res) =>{
             }
         }
     });
+
+    const users= await Users.findAll();
+
+    listofAuctions.some((element,index) => {
+        users.some((element2)=>{
+            if(element.UserId===element2.id){
+                listofAuctions[index].dataValues.Seller=element2.username;
+                listofAuctions[index].dataValues.SellerRating=element2.Rating;
+                return true;
+            }
+        });
+    });
+
     res.json(listofAuctions);
 })
   
 
 router.post("/",validT, async (req, res) => {
     const auction = req.body;
+    req.body.UserId=res.userId.id;
     await Auctions.create(auction).then(result => res.json(result));
 });
 
@@ -122,7 +139,7 @@ module.exports = router;
 
 
 
-router.post('/update/',async (req, res) =>{
+router.post('/update/',validT,async (req, res) =>{
     const UpdateAuction = await Auctions.upsert(req.body);
     res.json(UpdateAuction);
 })

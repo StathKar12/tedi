@@ -1,4 +1,3 @@
-
 .Auction {
     width: 400px;
     height: auto;
@@ -19,14 +18,11 @@
     display: grid;
     place-content: center;
     color: white;
-    /* overflow:auto; */
-
   }
   
   .Auction .body {
     height: auto;
     overflow:auto; 
-    /* display: grid; */
     place-content: center;
   }
   
@@ -73,7 +69,6 @@
 .Photos{
   margin-right: 10px;
   margin-top: 10px;
-  /* margin-left: 10px; */
   margin-bottom: 60px;
   float :left;
   width: auto;
@@ -96,37 +91,33 @@
 
 
 .TryLeft{
+  margin-top: 20px;
   float: left;
   display: flex;
 }
 
 .PostBid{
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  display: grid;
   float: left;
 }
 .PostBid #PostAuctionForm{
   float: center;
-  margin-left: 150px;
+  margin-left: 100px;
   width: 200px;
 }
 
-.PostBid #PostAuctionForm1{
-  float: center;
-  margin-left: 190px;
-  width: 200px;
-}
-
-.PostBid #PostAuctionForm2{
-  float: center;
-  margin-left: 210px;
-  width: 200px;
-}
-
-.body{
-  float:left;
+.body2{
+  display: grid;
+  height: auto;
+  border: 5px solid burlywood;
+  width: 350px;
+  margin-left: 10px;
+  place-content: center;
 }
 
 .bidbutton {
+  width: 350px;
   border: none;
   background-color: black;
   border-radius: 5px;
@@ -143,4 +134,26 @@
   background-color: black;
   color: white;
   margin-left: 150px;
+}
+
+
+.SOLD{
+  color: green;
+  font-size:x-large;
+  font-weight: bold;
+}
+
+.exp{
+  color: red;
+  font-size:x-large;
+  font-weight: bold;
+}
+
+.AuctionTitle2{
+  place-content: center;
+  display: flex;
+}
+
+.grid{
+  display: flex;
 }

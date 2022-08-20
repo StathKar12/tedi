@@ -1,7 +1,10 @@
 //Require :
 const express = require('express');
 const db = require("./models");
+const { Users } = require("./models");
+const bcrypt = require("bcrypt");
 const cors = require("cors");
+
 
 const app = express();
 const port = 8080;
@@ -31,6 +34,18 @@ app.use("/Upload", UploadRouter);
 
 db.sequelize.sync().then(() =>
 { 
+    Users.findByPk(1).then((res)=>{
+        if(res===null)
+        bcrypt.hash("password", 10).then((hash) => {
+            Users.create({
+                id:1,
+                username: "admin",
+                password: hash,
+                Active: 1,
+            });
+        }); 
+    })
+    
     app.listen(port,()=>
     {
         console.log("Listening on port : ",port);
@@ -40,5 +55,3 @@ db.sequelize.sync().then(() =>
 {
     console.error("\nDatabase Error or Listener Error: \n",err)
 });
-
-

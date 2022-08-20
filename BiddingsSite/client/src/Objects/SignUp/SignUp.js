@@ -18,12 +18,17 @@ function SignUp() {
         username: Yup.string().max(18).min(6).required("Username is required to Sign Up"),
         password: Yup.string().max(18).min(6).required("Password is required to Sign Up"),
     });
+
     const onSubmit = (data) => {
-        axios.post("http://localhost:8080/Users",data).then(() => {
-        console.log(data);
-        navigate("/");
-    });
-};
+        axios.post(`http://localhost:8080/Users/SignUp`,data).then((res)=>{
+            if(res.data.error){
+                alert(res.data.error)
+            }else{
+                navigate("/");
+                navigate(0);
+            }
+        });
+    };
 
     return (
         <div className="SignUpCSS">
