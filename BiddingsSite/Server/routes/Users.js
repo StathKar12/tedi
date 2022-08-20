@@ -8,12 +8,12 @@ const {sign} = require ("jsonwebtoken");
 router.post("/SignUp", async (req, res) => {
 
     const userdouble=await Users.findAll({where :{ username:req.body.username}})
-    console.log(userdouble);
-    if(userdouble.datavalues!==null){
-        console.log("test");
+
+    if(userdouble.length>0){
         res.json({error: "Username Already Used Please Choose An Other One"});
         return;
     }
+
     const {username , password} = req.body;
     bcrypt.hash(password, 10).then((hash) => {
         Users.create({
