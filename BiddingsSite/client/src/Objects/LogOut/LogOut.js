@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from "react";
 import "./LogOut.css"
 import { useNavigate} from "react-router-dom";
 

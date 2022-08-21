@@ -1,7 +1,7 @@
 const e = require('express');
 const express = require('express');
 const router = express.Router();
-
+const exportFromJSON = require('export-from-json')
 const { Auctions ,Files , Categories , Users} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
 
@@ -143,3 +143,16 @@ router.post('/update/',validT,async (req, res) =>{
     const UpdateAuction = await Auctions.upsert(req.body);
     res.json(UpdateAuction);
 })
+
+
+// router.get('/AdminDownloadXML/:id',validT,async (req, res) =>{
+//     adminid=res.userId.id
+//     Id=req.params.id;
+//     if(adminid!==1){
+//         res.json({error:"You are not an admin"});
+//         return;
+//     }
+//     const auction=await Auctions.findByPk(Id);
+
+//     res.json(auction);
+// })

@@ -1,11 +1,12 @@
 //Require :
 const express = require('express');
 const db = require("./models");
-const { Users } = require("./models");
+const { Users,Location } = require("./models");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
-
-
+const https =require('https');
+const fs =require('fs');
+const path = require('path');
 const app = express();
 const port = 8080;
 
@@ -30,6 +31,7 @@ const LocationRouter = require("./routes/Location");
 app.use("/Location", LocationRouter);
 
 const UploadRouter = require("./routes/Upload");
+const { fstat } = require('fs');
 app.use("/Upload", UploadRouter);
 
 db.sequelize.sync().then(() =>
@@ -42,11 +44,23 @@ db.sequelize.sync().then(() =>
                 username: "admin",
                 password: hash,
                 Active: 1,
+                Rating:0,
+                Name: "adminName",
+                LastName :"adminLastName",
+                AFM: 1, 
+                Email:"admin@gmail.com",
+                Phone:653211230,
+            }).then(()=>{
+                Location.create({Country:"AdminCountry",Location:"AdminLocation",UserId:1})
             });
         }); 
     })
     
-    app.listen(port,()=>
+    const sslS=https.createServer({
+        key: fs.readFileSync(path.join(__dirname,'cert','key.pem')),
+        cert: fs.readFileSync(path.join(__dirname,'cert','cert.pem')),
+    },app)
+    sslS.listen(port,()=>
     {
         console.log("Listening on port : ",port);
     })

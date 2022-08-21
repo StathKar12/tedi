@@ -99,12 +99,12 @@ function PostAuction(){
                 input.Buy_Price=data.Buy_Price;
             }
 
-            axios.post("http://localhost:8080/Auctions",input, {headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+            axios.post("https://localhost:8080/Auctions",input, {headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
                 if (res.data.error){
                     alert(res.data.error)
                 }else{
                     selected.forEach(category =>{   
-                        axios.post("http://localhost:8080/Categories",{CategoryName:category.value,AuctionId:res.data.id});
+                        axios.post("https://localhost:8080/Categories",{CategoryName:category.value,AuctionId:res.data.id},{headers: {AccT: sessionStorage.getItem("AccT")}});
                     });
                     const input2={Location:data.Location,Country:data.Country,AuctionId:res.data.id};
                     if(data.Longtitude.length>0 && data.Latitude.length>0)
@@ -112,13 +112,13 @@ function PostAuction(){
                         input2.Longtitude=data.Longtitude;
                         input2.Latitude=data.Latitude;
                     }
-                    axios.post("http://localhost:8080/Location",input2);
+                    axios.post("https://localhost:8080/Location",input2,{headers: {AccT: sessionStorage.getItem("AccT")}});
 
                     if(uploadedFiles.length>0){
                         uploadedFiles.forEach(image =>{   
                             const formData = new FormData();
                             formData.append('fileupload', image);
-                            axios.post(`http://localhost:8080/Upload/${res.data.id}`, formData).then((response) => {
+                            axios.post(`https://localhost:8080/Upload/${res.data.id}`, formData,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((response) => {
                             });
                          });
                     }

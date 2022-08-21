@@ -16,9 +16,33 @@ module.exports = (sequelize, DataTypes) => {
         },
         Rating:{
             type: DataTypes.INTEGER,
-            allowNull:true,
-        }
-        
+            allowNull:false,
+        },
+        Active:{
+            type: DataTypes.INTEGER,
+            allowNull:false,
+        },
+        Name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        LastName: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        AFM:{
+            type: DataTypes.STRING,
+            allowNull:false,
+        },
+        Email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        Phone:{
+            type: DataTypes.STRING,
+            allowNull:false,
+        },
+
     });
     Users.associate = (models) => {
         Users.hasMany(models.Auctions, {

@@ -1,0 +1,75 @@
+table {
+    table-layout: fixed;
+    width: 90%;
+    border-collapse: collapse;
+    border: 3px solid black;
+    margin-bottom: 50px;
+    background-color: burlywood;
+}
+ th, td {
+    padding: 10px;
+}
+
+th {
+    letter-spacing: 2px;
+}
+  
+td {
+    letter-spacing: 1px;
+}
+  
+tbody td {
+    text-align: center;
+}
+  
+tfoot th {
+    text-align: right;
+} 
+
+ thead, tfoot {
+  color: white;
+  text-shadow: 1px 1px 1px black;
+}
+  
+thead th, tfoot th, tfoot td {
+  background: linear-gradient(to bottom,black,black);
+  border: 3px solid black;
+} 
+
+
+.body5{
+    border: 1px solid black;
+}
+
+.body6{
+    border: 1px solid black;
+}
+
+.Title{
+    font-family: 'helvetica neue', helvetica, arial, sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.body5:hover {
+    box-shadow: black;
+    background-color: rgb(160, 204, 73);
+    cursor: pointer;
+  }  
+
+
+
+.User {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    padding-top: 100px;
+  }
+  
+.bidbutton:hover{
+    box-shadow: black;
+    background-color: rgb(160, 204, 73);
+    cursor: pointer;
+}

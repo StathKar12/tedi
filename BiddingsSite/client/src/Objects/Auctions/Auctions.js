@@ -32,7 +32,7 @@ function Auctions() {
   }
   const renderImage=(value)=>{
     if(typeof value.FileName !=="undefined"){
-        return <img className="cropped2" src={require('./../../UploadedItems/'+value.FileName)} alt=""/>;
+        return <img className="cropped1" src={require('./../../UploadedItems/'+value.FileName)} alt=""/>;
     }
     return <h1>  </h1>
   }
@@ -57,11 +57,12 @@ function Auctions() {
     const [sendRequest ,setsendRequest] =useState();
 
     useEffect(() => {
-      axios.get("http://localhost:8080/Auctions/all",{
+      axios.get("https://localhost:8080/Auctions/all",{
         params: {selected}
       }).then((res) => {
         setlistOfAuctions(res.data);
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[sendRequest]);
     
     return (

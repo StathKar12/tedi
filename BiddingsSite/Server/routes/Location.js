@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Location } = require("../models");
-
+const { validT } = require('../middlewares/authMiddleware');
 router.get("/", async (req, res) => {
     const listOfLocations = await Location.findAll();
     res.json(listOfLocations);
@@ -13,7 +13,7 @@ router.get('/:id',async (req, res) =>{
     res.json(location)
   })
   
-router.post("/", async (req, res) => {
+router.post("/",validT, async (req, res) => {
     const Location_t = req.body;
     await Location.create(Location_t);
     res.json(Location_t);

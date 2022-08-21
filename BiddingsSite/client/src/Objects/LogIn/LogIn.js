@@ -15,7 +15,7 @@ function LogIn() {
 
   const login = () => {
     const data = {username: username, password: password};
-    axios.post("http://localhost:8080/Users/login", data).then((res) => {
+    axios.post("https://localhost:8080/Users/login", data).then((res) => {
 
       if (res.data.error) {
         alert(res.data.error);

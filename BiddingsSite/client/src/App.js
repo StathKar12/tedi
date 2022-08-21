@@ -8,6 +8,8 @@ import SignUp from "./Objects/SignUp/SignUp";
 import LogIn from "./Objects/LogIn/LogIn";
 import LogOut from "./Objects/LogOut/LogOut";
 import Auction  from "./Objects/Auctions/Auction";
+import UserList from "./Objects/UserList/UserList.js";
+import User from "./Objects/UserList/User.js";
 import { useEffect, useState  } from "react";
 import axios from 'axios';
 
@@ -15,7 +17,7 @@ function App() {
 
   const [Active,setActive]=useState();
   useEffect(() => {
-    axios.get(`http://localhost:8080/Users/Active/`,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res)=>{
+    axios.get(`https://localhost:8080/Users/Active/`,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res)=>{
       if (res.data.error){
         setActive(-1);
       }
@@ -82,6 +84,7 @@ const renderChoiceActive=()=>{
             <Link to="/Auctions">Auctions</Link>
             <Link to="/PostAuction">PostAuction</Link>
             <Link to="/UserList">UserList</Link>
+
           </div>
           <div className="navicationbar-right">
             <Link to="/LogOut">LogOut</Link>
@@ -93,6 +96,8 @@ const renderChoiceActive=()=>{
           <Route path='/PostAuction' element={<PostAuction/>} />
           <Route path='/Auction/:Id' element={<Auction/>} />
           <Route path='/LogOut' element={<LogOut/>} />
+          <Route path='/User/:Id' element={<User/>} />
+          <Route path='/UserList' element={<UserList/>} />
         </Routes>
       </Router>
       )

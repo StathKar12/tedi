@@ -13,3 +13,6 @@ npm install sequelize-cli
 
 #credentials
 db_pass : root
+
+
+SSL passphrase : phrase

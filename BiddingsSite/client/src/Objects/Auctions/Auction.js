@@ -6,6 +6,7 @@ import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import "./Auctions.css"
 
+
 const getToday=()=>{
     var today = new Date();
     var dd = today.getDate();
@@ -26,9 +27,12 @@ function Auction(){
     let {Id} = useParams();
     const [Auction,setAuction]=useState({});
     const [files,setFiles]=useState([]);
+    const [Cats,setCat]=useState([]);
     const [location,setLocation]=useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [Bids, setBids] = useState([]);
+    const [Active,setActive]=useState();
+
     let navigate=useNavigate();
 
     const fun2=(value,key)=>{try {return renderImage(value,key)}catch(err){return <h2 key={key}> </h2>}}
@@ -56,20 +60,14 @@ function Auction(){
                     AuctionId:Auction.id,
                     Seller:Auction.UserId
                 }
-                // const inputLocation=
-                // {
-                //     Country:USERCOUNTRY PERIMENO STATHI
-                //     Location:USERLOCATION PERIMENO STATHI
-                //     UserId:USERID PERIMENO STATHI
-                // }
-
-                axios.post("http://localhost:8080/Bids/",inputBid,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+                
+                axios.post("https://localhost:8080/Bids/",inputBid,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
                     if (res.data.error){
                         alert(res.data.error)
                     }else{
                         Auction.Number_of_Bids+=1;
                         Auction.Currently=data.Bid;
-                        axios.post(`http://localhost:8080/Auctions/update`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+                        axios.post(`https://localhost:8080/Auctions/update`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
                             navigate(0);
                         });
                     }
@@ -89,20 +87,15 @@ function Auction(){
             AuctionId:Auction.id,
             Seller:Auction.UserId
         }
-        // const inputLocation=
-        // {
-        //     Country:USERCOUNTRY PERIMENO STATHI
-        //     Location:USERLOCATION PERIMENO STATHI
-        //     UserId:USERID PERIMENO STATHI
-        // }
-        axios.post("http://localhost:8080/Bids/",inputBid,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+
+        axios.post("https://localhost:8080/Bids/",inputBid,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
             if (res.data.error){
                 alert(res.data.error)
             }else{
                 Auction.Number_of_Bids+=1;
                 Auction.Active=2;
                 Auction.Currently=Auction.Buy_Price;
-                axios.post(`http://localhost:8080/Auctions/update`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+                axios.post(`https://localhost:8080/Auctions/update`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
                     navigate(0);
                 });
             }
@@ -129,7 +122,8 @@ function Auction(){
                 return <h1 className="SOLD"> SOLD FOR :{Auction.Currently}</h1>
             }else if(Auction.Active===-1){
             return <h1 className="exp" >This Auction Has Expired You Can No Longer Bid!</h1>
-           }
+           }else if(Active===-1 || Active===Auction.UserId )return <h1> </h1>
+           
            return <div className="PostBid">
                     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
                         <Form >
@@ -146,23 +140,36 @@ function Auction(){
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/Auctions/byid/${Id}`).then((res)=>{
+        
+        axios.get(`https://localhost:8080/Users/Active/`,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res)=>{
+             if (res.data.error){
+                setActive(-1);
+              }
+              else{
+                setActive(res.data);
+              }
+        });
+        axios.get(`https://localhost:8080/Auctions/byid/${Id}`).then((res)=>{
             
             res.data.Started=res.data.Started.replace("T", " At: ");
             res.data.Ends=res.data.Ends.replace("T", " At: ");
            
             setAuction(res.data);
         });
-        axios.get(`http://localhost:8080/Upload/byid/${Id}`).then((res2)=>{
+        axios.get(`https://localhost:8080/Upload/byid/${Id}`).then((res2)=>{
             setFiles(res2.data);    
         });
-        axios.get(`http://localhost:8080/Location/${Id}`).then((res3)=>{
+        axios.get(`https://localhost:8080/Location/${Id}`).then((res3)=>{
             setLocation(res3.data[0]);
         });
-        axios.get(`http://localhost:8080/Bids/byid/${Id}`).then((res4)=>{
+        axios.get(`https://localhost:8080/Bids/byid/${Id}`).then((res4)=>{
             setBids(res4.data);
         });
-
+        axios.get(`https://localhost:8080/Categories/byid/${Id}`,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res5)=>{
+            if (!res5.data.error){
+                setCat(res5)
+            }
+        });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
@@ -170,7 +177,79 @@ function Auction(){
     const validationSchema = Yup.object().shape({
         Bid: Yup.number().required(),
     });
-    
+    const onClick=(()=>{
+        let categories="";
+        Cats.data.forEach((element)=>{
+            categories+="  <Category>"+element.CategoryName+"</Category>\n"
+        });
+        
+        let bidsxml="";
+        Bids.forEach((element)=>{
+            bidsxml+=`     <Bid>\n      <Bidder Rating="${element.BidderRating}" UserID="${element.UserId}">\n         <Location>${element.BidderLocation}</Location>\n         `
+            bidsxml+=`<Country>${element.BidderCountry}</Country>\n       </Bidder>\n       <Time>${element.Time}</Time>\n       <Amount>$${element.Amount}</Amount>\n     </Bid>\n`;
+        });
+
+        var xmltext = `<Item ItemID="${Id}">\n  <Name>${Auction.Name}</Name>\n${categories}  <Currently>$${Auction.Currently}</Currently>\n  `;
+        xmltext+=`<First_Bid>$${Auction.First_Bid}</First_Bid>\n  <Number_of_Bids>${Auction.Number_of_Bids}</Number_of_Bids>\n  <Bids>\n${bidsxml}  </Bids>\n`;
+        xmltext+=`  <Location>${location.Location}</Location>\n  <Country>${location.Country}</Country>\n  <Started>${Auction.Started}</Started>\n  <Ends>${Auction.Ends}</Ends>\n`;
+        xmltext+=`  <Seller Rating="${Auction.SellerRating}" UserID="${Auction.UserId}"/>\n  <Description>${Auction.Description}</Description>\n</Item>`;
+        var filename = "Auction"+String(Id)+".xml";
+        var element = document.createElement('a');
+        var bb = new Blob([xmltext], {type: 'text/plain'});
+
+        element.setAttribute('href', window.URL.createObjectURL(bb));
+        element.setAttribute('download', filename);
+
+        element.dataset.downloadurl = ['text/plain', element.download, element.href].join(':');
+        element.draggable = true; 
+        element.classList.add('dragout');
+
+        element.click();
+    });
+
+    const onClick2=(()=>{
+
+        var catarray=[];
+        Cats.data.forEach((element)=>{
+            catarray.push(element.CategoryName);
+        });
+
+        var Bidsarray=[];
+        Bids.forEach((element)=>{
+            Bidsarray.push({Rating:element.BidderRating,UserId:element.UserId,Location:element.BidderLocation,Country:element.BidderCountry,Time:element.Time,Amount:element.Amount});
+        });
+        var jsontext = {
+            ItemID:Id,
+            Name:Auction.Name,
+            Categories:catarray,
+            Currently:Auction.Currently,
+            First_Bid:Auction.First_Bid,
+            Number_of_Bids:Auction.Number_of_Bids,
+            Bids:Bidsarray, 
+            Location:location.Location,
+            Country:location.Country,
+            Started:Auction.Started,
+            Ends:Auction.Ends,
+            Seller:Auction.UserId,
+            Description:Auction.Description,
+        };
+        const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+            JSON.stringify(jsontext)
+          )}`;
+          const link = document.createElement("a");
+          link.href = jsonString;
+          link.download = "Auction"+String(Id)+".json";
+      
+          link.click();
+    });
+
+    const renderDownloadXML=(()=>{
+        if(Active===1)
+          return (<div><button className='DownloadXML' type="submit" onClick={onClick}>Click To Download XML</button> 
+          <button className='DownloadXML' type="submit" onClick={onClick2}>Click To Download JSON</button></div>);
+        return <h1> </h1>
+    })
+
     return(
     <div className='grid'>
     <div className='TryLeft'>
@@ -193,6 +272,7 @@ function Auction(){
                 <h3 id="bd">Ends :{Auction.Ends}</h3>
                 <h3 id="bd">Description:</h3>       
                 <h3 id="bd" className='desc'>{Auction.Description}</h3>
+                {renderDownloadXML()}
             </div>
         </div> 
         </div>
@@ -204,8 +284,8 @@ function Auction(){
                 return ( 
                 <div className="body2" key={key}>
                     <h3>Bidder: {value.Bidder}</h3>
-                    <h3>Country: PERIMENO STATHI</h3>
-                    <h3>Location: PERIMENO STATHI</h3>
+                    <h3>Country: {value.BidderCountry}</h3>
+                    <h3>Location: {value.BidderLocation}</h3>
                     <h3>Rating: {value.BidderRating}</h3>
                     <h3>Amount: {value.Amount}</h3>
                     <h3>Time: {value.Time}</h3>

@@ -4,7 +4,7 @@ const { Files } = require("../models");
 let formidable = require('formidable');
 const crypto = require('crypto')
 let fs = require('fs');
-
+const { validT } = require('../middlewares/authMiddleware');
 
 router.get('/byid/:id',async (req, res) =>{
   const id = req.params.id;
@@ -12,7 +12,7 @@ router.get('/byid/:id',async (req, res) =>{
   res.json(uploads)
 })
 
-router.post("/:id",async (req, res) => {
+router.post("/:id",validT,async (req, res) => {
 
   const id = req.params.id;
   let form = new formidable.IncomingForm();

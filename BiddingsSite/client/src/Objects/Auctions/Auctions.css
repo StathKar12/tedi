@@ -18,17 +18,23 @@
     display: grid;
     place-content: center;
     color: white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
   }
   
   .Auction .body {
     height: auto;
-    overflow:auto; 
     place-content: center;
+    border: 5px solid burlywood;
+
   }
   
 .footer {
    height:50px; 
-   overflow:auto;  
+   overflow:auto; 
+   border: 5px solid burlywood; 
+   border-bottom-left-radius: 5px;
+   border-bottom-right-radius: 5px;
 }
 
 .footer #left{
@@ -42,8 +48,8 @@
   }
 
 .cropped1 {
-  width: 350px; 
-  height: 200px; 
+  width: 400px; 
+  height: 300px; 
   object-fit: cover;
   border: 5px solid burlywood;
 }
@@ -156,4 +162,13 @@
 
 .grid{
   display: flex;
+}
+
+.DownloadXML {
+  width: 300px;
+  border: none;
+  background-color: black;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
 }
