@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "./PostAuction.css";
+import { useNavigate ,useParams } from "react-router-dom";
+import "../PostAuction/PostAuction.css";
 import Select from "react-select";
 
 const options =
@@ -34,11 +34,15 @@ const options =
     return today;
 }
 
-function PostAuction(){
+function UpdateAuction(){
 
     let navigate=useNavigate();
+    let {Id} = useParams();
 
-    const [selected, setSelected] = useState([]);
+    var [selected, setSelected] = useState([]);
+    const [Auction,setAuction]=useState({});
+    const [initialValues, setInitialValues] = useState({});
+
     const [errorMessage, setErrorMessage] = useState('');
 
     const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -63,21 +67,51 @@ function PostAuction(){
         handleUploadFiles(chosenFiles);
     }
 
-    const initialValues={
-        Name:"",
-        Description:"",
-        Buy_Price:"",
-        First_Bid:"",
-        Started:"",
-        Ends:"",
-        Seller:0,
-        Country: "",
-        Location: "",
-        Longtitude:"",
-        Latitude: "",
+    useEffect(() => {
+        axios.get(`https://localhost:8080/Auctions/byid/${Id}`).then((res)=>{
+            setAuction(res.data);
+            axios.get(`https://localhost:8080/Location/${Id}`).then((res3)=>{
+                if (!res.data.error){
+                    if(typeof res3.data[0].Longtitude==="undefined" || typeof res3.data[0].Latitude==="undefined")
+                    {
+                        res3.data[0].Longtitude="";
+                        res3.data[0].Latitude="";
+                    }
+                    if(res3.data[0].Longtitude===null || res3.data[0].Latitude===null)
+                    {
+                        res3.data[0].Longtitude="";
+                        res3.data[0].Latitude="";
+                    }
+                    
+                    if(typeof res.data.Buy_Price==="undefined")
+                    {
+                        res.data.Buy_Price="";
+                    }
+                    if(res.data.Buy_Price===null)
+                    {
+                        res.data.Buy_Price="";
+                    }
+                    res.data.Started=res.data.Started.replace(" At: ","T");
+                    res.data.Ends=res.data.Ends.replace(" At: ","T");
+                    const initVal={
+                        Name:res.data.Name,
+                        Description:res.data.Description,
+                        Buy_Price:String(res.data.Buy_Price),
+                        First_Bid:String(res.data.First_Bid),
+                        Started:res.data.Started,
+                        Ends:res.data.Ends,
+                        Country: res3.data[0].Country,
+                        Location: res3.data[0].Location,
+                        Longtitude:String(res3.data[0].Longtitude),
+                        Latitude:String(res3.data[0].Latitude),
+                    };
+                    setInitialValues(initVal)
+                }
+            });
+        });
 
-        Time: "12:34"
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     
     const onSubmit=(data)=>{
@@ -85,6 +119,8 @@ function PostAuction(){
         {
             const input=
             {
+                id:Id,
+                UserId:Auction.UserId,
                 Name:data.Name,
                 Description:data.Description,
                 First_Bid:data.First_Bid,
@@ -92,20 +128,20 @@ function PostAuction(){
                 Number_of_Bids:0,
                 Started:data.Started,
                 Ends:data.Ends,
-                Active:1
+                Active:1,
             }
             if(data.Buy_Price.length>0){
                 input.Buy_Price=data.Buy_Price;
             }
 
-            axios.post("https://localhost:8080/Auctions",input, {headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+            axios.post(`https://localhost:8080/Auctions/Update/byid/${Id}`,input, {headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
                 if (res.data.error){
                     alert(res.data.error)
                 }else{
                     selected.forEach(category =>{   
-                        axios.post("https://localhost:8080/Categories",{CategoryName:category.value,AuctionId:res.data.id},{headers: {AccT: sessionStorage.getItem("AccT")}});
+                        axios.post("https://localhost:8080/Categories",{CategoryName:category.value,AuctionId:Id},{headers: {AccT: sessionStorage.getItem("AccT")}});
                     });
-                    const input2={Location:data.Location,Country:data.Country,AuctionId:res.data.id};
+                    const input2={Location:data.Location,Country:data.Country,AuctionId:Id};
                     if(data.Longtitude.length>0 && data.Latitude.length>0)
                     {
                         input2.Longtitude=data.Longtitude;
@@ -117,19 +153,23 @@ function PostAuction(){
                         uploadedFiles.forEach(image =>{   
                             const formData = new FormData();
                             formData.append('fileupload', image);
-                            axios.post(`https://localhost:8080/Upload/${res.data.id}`, formData,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((response) => {
+                            axios.post(`https://localhost:8080/Upload/${Id}`, formData,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((response) => {
                             });
                          });
                     }
-                };
+
+                }
             });
- 
-            navigate("/");
+            navigate("/Auctions");
+
         }
         else{
             setErrorMessage('You Must Choose At Least One Category For Your Auction!');
         }
     };
+
+    
+
 
     const validationSchema = Yup.object().shape({
         Buy_Price: Yup.number(),
@@ -145,9 +185,9 @@ function PostAuction(){
     });
     
 
-
-    return(
-        <div className="PostAuction">
+    const renderifInited=(()=>{
+        if(typeof initialValues.Name!="undefined"){
+            return(        <div className="PostAuction">
             <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}> 
                 <Form className="PostAuctionCSS">
                     
@@ -202,8 +242,10 @@ function PostAuction(){
                 <button type="submit"> Post Auction </button>
                 </Form>
             </Formik> 
-        </div>
-    );
+        </div>)
+        }
+    })
+    return(<div>{renderifInited()}</div>);
 
 }
-export default PostAuction;
+export default UpdateAuction;

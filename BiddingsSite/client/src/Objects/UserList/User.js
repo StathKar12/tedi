@@ -26,7 +26,6 @@ function User() {
       if (res.data.error){
           alert(res.data.error)
       }else{
-          console.log("Deleted");
           navigate("/UserList");
           navigate(0);
       }

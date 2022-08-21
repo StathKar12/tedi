@@ -45,7 +45,7 @@ function SignUp() {
             if(res.data.error){
                 alert(res.data.error)
             }else{
-                alert("Your Sign Up Was Successfull Please Wait For Admin Aproval!")
+                alert("Your Sign Up Was Successfull Please Wait For Admin Approval!")
                 navigate("/");
                 navigate(0);
             }

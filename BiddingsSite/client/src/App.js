@@ -8,6 +8,7 @@ import SignUp from "./Objects/SignUp/SignUp";
 import LogIn from "./Objects/LogIn/LogIn";
 import LogOut from "./Objects/LogOut/LogOut";
 import Auction  from "./Objects/Auctions/Auction";
+import UpdateAuction  from "./Objects/Auctions/UpdateAuction.js";
 import UserList from "./Objects/UserList/UserList.js";
 import User from "./Objects/UserList/User.js";
 import { useEffect, useState  } from "react";
@@ -49,6 +50,7 @@ const renderChoiceActive=()=>{
             <Route path='/PostAuction' element={<PostAuction/>} />
             <Route path='/Auction/:Id' element={<Auction/>} />
             <Route path='/LogOut' element={<LogOut/>} />
+            <Route path='/UpdateAuction/:Id' element={<UpdateAuction/>} />
           </Routes>
         </Router>
       )
@@ -98,6 +100,8 @@ const renderChoiceActive=()=>{
           <Route path='/LogOut' element={<LogOut/>} />
           <Route path='/User/:Id' element={<User/>} />
           <Route path='/UserList' element={<UserList/>} />
+          <Route path='/UpdateAuction/:Id' element={<UpdateAuction/>} />
+          
         </Routes>
       </Router>
       )

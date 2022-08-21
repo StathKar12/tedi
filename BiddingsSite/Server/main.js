@@ -31,7 +31,6 @@ const LocationRouter = require("./routes/Location");
 app.use("/Location", LocationRouter);
 
 const UploadRouter = require("./routes/Upload");
-const { fstat } = require('fs');
 app.use("/Upload", UploadRouter);
 
 db.sequelize.sync().then(() =>

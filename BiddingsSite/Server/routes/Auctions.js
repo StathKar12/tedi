@@ -145,14 +145,21 @@ router.post('/update/',validT,async (req, res) =>{
 })
 
 
-// router.get('/AdminDownloadXML/:id',validT,async (req, res) =>{
-//     adminid=res.userId.id
-//     Id=req.params.id;
-//     if(adminid!==1){
-//         res.json({error:"You are not an admin"});
-//         return;
-//     }
-//     const auction=await Auctions.findByPk(Id);
+router.post('/Delete/:id',validT,async (req, res) =>{
+    reqId=req.params.id;
+    const UpdateAuction = await Auctions.destroy({where: { id: reqId },});
+    res.json(UpdateAuction);
+})
 
-//     res.json(auction);
-// })
+
+router.post('/Update/byid/:id',validT,async (req, res) =>{
+    usrid=res.userId.id
+    if(usrid!==req.body.UserId && usrid!==1){
+        res.json({error:"Its not Your Auction To Change"});
+        return;
+    }
+    reqId=req.params.id;
+    await Auctions.destroy({where: {id:reqId},});
+    const auction=req.body;
+    await Auctions.create(auction).then(result => res.json(result));
+})

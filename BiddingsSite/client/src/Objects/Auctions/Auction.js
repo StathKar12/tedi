@@ -52,6 +52,8 @@ function Auction(){
         }
         else
         {
+            let isExecuted = window.confirm("Are You Sure You Want To Bid?");
+           if(isExecuted)
            if(typeof Auction.Number_of_Bids!=="undefined"){
                 const inputBid=
                 {
@@ -87,7 +89,8 @@ function Auction(){
             AuctionId:Auction.id,
             Seller:Auction.UserId
         }
-
+        let isExecuted = window.confirm("Are You Sure You Want To Buy Now?");
+        if(isExecuted)
         axios.post("https://localhost:8080/Bids/",inputBid,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
             if (res.data.error){
                 alert(res.data.error)
@@ -249,7 +252,49 @@ function Auction(){
           <button className='DownloadXML' type="submit" onClick={onClick2}>Click To Download JSON</button></div>);
         return <h1> </h1>
     })
+    const onClickDel=(()=>{
+        let isExecuted = window.confirm("Are You Sure Deleting The Auction?");
+        if(isExecuted)
+        axios.post(`https://localhost:8080/Auctions/Delete/${Id}`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res)=>{
+            if (res.data.error){
+                alert(res.data.error)
+            }else{
+                navigate("/Auctions");
+                navigate(0);
+            }
+          });
+    })
+    const onClickChange=(()=>{
+        navigate(`/UpdateAuction/${Id}`);
+    })
+    const renderChanges=(()=>{
+        if(Active===Auction.UserId || Active===1){
+            if(Auction.Active===0 || (Auction.Active>0 && Auction.Number_of_Bids===0) || Active===1)
+                return(
+                        <div><button className='DownloadXML' type="submit" onClick={onClickDel}>Click To Delete the Auction</button>
+                        <button className='DownloadXML' type="submit" onClick={onClickChange}>Click To Change the Auction</button></div>
+                      );
+        }
+        return <h1> </h1>
+    })
 
+
+    const renderCats=(()=>{
+        if(typeof Cats.data !== "undefined"){
+
+            let catarray="Categories :";
+            Cats.data.forEach((element,index)=>{
+                if(index===0)
+                    catarray+=" "+element.CategoryName;
+                else
+                catarray+=", "+element.CategoryName;
+            })
+            return<h3 id="bd">{catarray}</h3>
+        }
+        else{
+            return <h2> </h2>
+        }
+    });
     return(
     <div className='grid'>
     <div className='TryLeft'>
@@ -265,14 +310,17 @@ function Auction(){
             <div className='body2'>
                 <h3 id="bd">Number of bids :{Auction.Number_of_Bids}</h3>
                 <h3 id="bd">Country : {location.Country} </h3>
-                <h3 id="bd">Location : {location.Location} , Cords : ({location.Longtitude},{location.atitude})</h3>
+                <h3 id="bd">Location : {location.Location} </h3>
+                <h3 id="bd">Cords : ({location.Longtitude},{location.Latitude})</h3>
                 <h3 id="bd">Seller: {Auction.Seller} </h3>
                 <h3 id="bd">Seller Rating: {Auction.SellerRating} </h3>
                 <h3 id="bd">Starts : {Auction.Started}</h3>       
                 <h3 id="bd">Ends :{Auction.Ends}</h3>
                 <h3 id="bd">Description:</h3>       
                 <h3 id="bd" className='desc'>{Auction.Description}</h3>
+                {renderCats()}
                 {renderDownloadXML()}
+                {renderChanges()}
             </div>
         </div> 
         </div>
