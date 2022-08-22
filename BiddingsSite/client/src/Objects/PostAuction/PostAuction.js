@@ -182,15 +182,15 @@ function PostAuction(){
                     <label>Location : </label>
                     <ErrorMessage name="Location" component="h1"/>
                     <Field id="PostAuctionForm" name="Location" placeholder="(Ex.Johns Place)"/>
-                    
-                    <label>Longtitude (Optional): </label>
-                    <ErrorMessage name="Longtitude" component="h1"/>
-                    <Field id="PostAuctionForm" name="Longtitude" placeholder="(Ex.0.00000)"/>
-                    
+
                     <label>Latitude (Optional): </label>
                     <ErrorMessage name="Latitude" component="h1"/>
                     <Field id="PostAuctionForm" name="Latitude" placeholder="(Ex.0.00000)"/>
-                    
+
+                    <label>Longtitude (Optional): </label>
+                    <ErrorMessage name="Longtitude" component="h1"/>
+                    <Field id="PostAuctionForm" name="Longtitude" placeholder="(Ex.0.00000)"/>
+        
                     <label htmlFor='fileUpload'>Images (Optional):
                     <ErrorMessage name="Images" component="h1"/>
                     <Field type="file" id="PostAuctionForm" name="Images" placeholder="(Ex.0.00000)" multiple onChange={handleFileEvent}/>

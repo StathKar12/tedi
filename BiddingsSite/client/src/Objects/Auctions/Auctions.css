@@ -118,13 +118,13 @@
   display: grid;
   height: auto;
   border: 5px solid burlywood;
-  width: 350px;
+  width: 400px;
   margin-left: 20px;
   place-content: center;
 }
 
 .body2 #bd{
-  margin-left:40px;
+  margin-left:60px;
 }
 
 .bidbutton {
@@ -178,9 +178,20 @@
   border-radius: 5px;
   color: white;
   font-weight: bold;
+  margin-left: 40px;
 }
 .DownloadXML:hover{
   box-shadow: black;
   cursor: pointer;
   background-color: yellowgreen;
+}
+
+.leaflet-container{
+  width: 400px;
+  height: 400px;
+  z-index: 1;
+}
+
+.mapleaf{
+  border: 5px solid burlywood;
 }

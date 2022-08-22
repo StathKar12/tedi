@@ -1,11 +1,16 @@
 import axios from 'axios';
 import React from 'react';
-import { useEffect, useState  } from "react";
+import { useEffect, useState ,useRef } from "react";
 import { useNavigate,useParams } from "react-router-dom";
 import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import "./Auctions.css"
+import {MapContainer , TileLayer,Marker, Popup  } from 'react-leaflet'
 
+// import 'leaflet/dist/leaflet.css';
+
+import markerIconPng from "leaflet/dist/images/marker-icon.png"
+import {Icon} from 'leaflet'
 
 const getToday=()=>{
     var today = new Date();
@@ -33,6 +38,7 @@ function Auction(){
     const [Bids, setBids] = useState([]);
     const [Active,setActive]=useState();
 
+    const mapref=useRef();
     let navigate=useNavigate();
 
     const fun2=(value,key)=>{try {return renderImage(value,key)}catch(err){return <h2 key={key}> </h2>}}
@@ -107,8 +113,6 @@ function Auction(){
     const renderBuyPrice = () => {
         if(Auction.Buy_Price!=null)
             return <div> <button className='bidbutton' type="button" onClick={BuyNow}>Click To Buy Now For {Auction.Buy_Price}$!</button></div>;
-            else
-            return <h2> </h2>
     }
     const initialValues={
         Bid:""
@@ -139,7 +143,6 @@ function Auction(){
                     {renderBuyPrice()}
                 </div> 
         }
-        return <h1> </h1>
     };
 
     useEffect(() => {
@@ -250,7 +253,6 @@ function Auction(){
         if(Active===1)
           return (<div><button className='DownloadXML' type="submit" onClick={onClick}>Click To Download XML</button> 
           <button className='DownloadXML' type="submit" onClick={onClick2}>Click To Download JSON</button></div>);
-        return <h1> </h1>
     })
     const onClickDel=(()=>{
         let isExecuted = window.confirm("Are You Sure Deleting The Auction?");
@@ -275,13 +277,27 @@ function Auction(){
                         <button className='DownloadXML' type="submit" onClick={onClickChange}>Click To Change the Auction</button></div>
                       );
         }
-        return <h1> </h1>
     })
+    const renderMap=(()=>{
 
+        if(typeof location.Longtitude!=="undefined" && typeof location.Latitude!=="undefined"){
+           return(
+           <MapContainer className='mapleaf' center={{lat:location.Latitude,lng:location.Longtitude}} zoom={12} ref={mapref}>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossorigin=""/>
+                <TileLayer url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=5BGWMRomNRQMyt3ZdEn6" />
+                <Marker position={[location.Latitude, location.Longtitude]} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} >
+                    <Popup>
+                        {location.Location}
+                    </Popup>
+                </Marker>
+           </MapContainer>
+           )
+        }
+    })
 
     const renderCats=(()=>{
         if(typeof Cats.data !== "undefined"){
-
+            
             let catarray="Categories :";
             Cats.data.forEach((element,index)=>{
                 if(index===0)
@@ -290,9 +306,6 @@ function Auction(){
                 catarray+=", "+element.CategoryName;
             })
             return<h3 id="bd">{catarray}</h3>
-        }
-        else{
-            return <h2> </h2>
         }
     });
     return(
@@ -311,7 +324,7 @@ function Auction(){
                 <h3 id="bd">Number of bids :{Auction.Number_of_Bids}</h3>
                 <h3 id="bd">Country : {location.Country} </h3>
                 <h3 id="bd">Location : {location.Location} </h3>
-                <h3 id="bd">Cords : ({location.Longtitude},{location.Latitude})</h3>
+                <h3 id="bd">Cords : ({location.Latitude},{location.Longtitude})</h3>
                 <h3 id="bd">Seller: {Auction.Seller} </h3>
                 <h3 id="bd">Seller Rating: {Auction.SellerRating} </h3>
                 <h3 id="bd">Starts : {Auction.Started}</h3>       
@@ -319,6 +332,7 @@ function Auction(){
                 <h3 id="bd">Description:</h3>       
                 <h3 id="bd" className='desc'>{Auction.Description}</h3>
                 {renderCats()}
+                {renderMap()}
                 {renderDownloadXML()}
                 {renderChanges()}
             </div>

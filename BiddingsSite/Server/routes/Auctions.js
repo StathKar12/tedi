@@ -1,7 +1,6 @@
 const e = require('express');
 const express = require('express');
 const router = express.Router();
-const exportFromJSON = require('export-from-json')
 const { Auctions ,Files , Categories , Users} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
 
