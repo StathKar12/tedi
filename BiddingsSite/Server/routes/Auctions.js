@@ -1,7 +1,7 @@
 const e = require('express');
 const express = require('express');
 const router = express.Router();
-const { Auctions ,Files , Categories , Users} = require("../models");
+const { Auctions ,Files , Categories , Users,Location} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
 
 
@@ -61,7 +61,7 @@ router.get('/all',async (req, res) =>{
 
     var listofAuctions =[];
     var listofCategories=[];
-    
+
     if(typeof req.query.selected !=="undefined" )
     {
         const categories=req.query.selected;
@@ -79,6 +79,60 @@ router.get('/all',async (req, res) =>{
     else{
         listofAuctions= await Auctions.findAll();
     }
+
+    let indexes1=[];
+    if(typeof req.query.More!=="undefined" &&req.query.More!=="")
+    listofAuctions.some((element,index)=>{
+        if(Number(element.Currently)<Number(req.query.More)){
+            indexes1.push(index);
+        }
+    })
+    
+    indexes1.some((element,index)=>{
+        listofAuctions.splice(element-index,1);
+    })
+
+    let indexes2=[];
+    if(typeof req.query.Less!=="undefined" &&req.query.Less!=="")
+    listofAuctions.some((element,index)=>{
+        if(Number(element.Currently)>Number(req.query.Less)){
+            indexes2.push(index);
+        }
+    })
+
+    indexes2.some((element,index)=>{
+        listofAuctions.splice(element-index,1);
+    })
+
+    const listoflocs = await Location.findAll();
+    let indexes3=[];
+    if(typeof req.query.Loc!=="undefined" &&req.query.Loc!=="")
+    listofAuctions.some((element,index)=>{
+        listoflocs.some((elem)=>{
+            if(elem.AuctionId === element.id)
+                if(elem.Location!==req.query.Loc){
+                    indexes3.push(index);
+                }
+        })
+    })
+    
+    indexes3.some((element,index)=>{
+        listofAuctions.splice(element-index,1);
+    })
+
+
+    let indexes4=[];
+    if(typeof req.query.Desc!=="undefined" &&req.query.Desc!=="")
+    listofAuctions.some((element,index)=>{
+        if(!element.Description.includes(req.query.Desc)){
+            indexes4.push(index);
+        }
+    })
+
+    indexes4.some((element,index)=>{
+        listofAuctions.splice(element-index,1);
+    })
+
     const listofFiles = await Files.findAll();
 
     

@@ -5,10 +5,7 @@ import { useNavigate,useParams } from "react-router-dom";
 import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import "./Auctions.css"
-import {MapContainer , TileLayer,Marker, Popup  } from 'react-leaflet'
-
-// import 'leaflet/dist/leaflet.css';
-
+import {MapContainer , TileLayer,Marker, Popup  } from 'react-leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {Icon} from 'leaflet'
 
@@ -278,12 +275,14 @@ function Auction(){
                       );
         }
     })
+
     const renderMap=(()=>{
 
         if(typeof location.Longtitude!=="undefined" && typeof location.Latitude!=="undefined"){
+
            return(
            <MapContainer className='mapleaf' center={{lat:location.Latitude,lng:location.Longtitude}} zoom={12} ref={mapref}>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossorigin=""/>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossOrigin="" />
                 <TileLayer url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=5BGWMRomNRQMyt3ZdEn6" />
                 <Marker position={[location.Latitude, location.Longtitude]} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} >
                     <Popup>

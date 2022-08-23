@@ -21,7 +21,6 @@ function Auctions() {
   
   const [selected, setSelected] = useState([]);
 
-  
   const fun2=(value)=>{try {return renderImage(value)}catch(err){return <h2> </h2>}}
 
   const renderBuyPrice = (Buy_Price) => {
@@ -57,20 +56,39 @@ function Auctions() {
     const [sendRequest ,setsendRequest] =useState();
 
     useEffect(() => {
+      const More = document.getElementById('left').value
+      const Less = document.getElementById('right').value
+      let Desc=""
+      if(document.getElementById('Desc')!==null)
+        Desc = document.getElementById('Desc').value;
+
+      let Loc = ""
+      if(document.getElementById('Loc')!==null)
+        Loc=document.getElementById('Loc').value
       axios.get("https://localhost:8080/Auctions/all",{
-        params: {selected}
+        params: {selected,More,Less,Desc,Loc}
       }).then((res) => {
         setlistOfAuctions(res.data);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[sendRequest]);
-    
+
     return (
       <div>
-        <div className="Select"> 
-          <Select name={"Categories"} options={options} selected={selected} onChange={setSelected} isMulti={true} placeholder={"Categorical Search "}/>
-          <button  id="button" type="button" onClick={setsendRequest}>Click To Search!</button> 
-        </div>
+        <div> 
+            <div className="PriceRange">
+            <div className="Select"> 
+              <Select name={"Categories"} options={options} selected={selected} onChange={setSelected} isMulti={true} placeholder={"Categorical Search "} />
+            </div>
+            <div id="Range">
+              <input type="number" id="left" name="More" placeholder="More Than" />
+              <input type="number"  id='right' name="Less"  placeholder="Less Than" />
+            </div>
+              <input type="text" className='Select' id="Desc"  placeholder="Search by Description" />
+              <input type="text" className='Select' id="Loc"  placeholder="Search by Location" />
+            <button  id="button" type="submit" onClick={setsendRequest}>Click To Search!</button> 
+            </div>
+        </div> 
        {listOfAuctions.map((value,key) => {
             return ( 
                <div className="Auction" key={key} onClick={()=>{navigate(`/Auction/${value.id}`)}}> 
@@ -80,6 +98,7 @@ function Auctions() {
                   {fun2(value)}
                   <h2>Current Bid :{value.Currently} </h2>
                   <h2>Seller :{value.UserId}</h2>
+                  <h2>Description :{value.Description}</h2>
                   {renderIfNotExpired(value)}
                 </div>
                 <div className="footer">
