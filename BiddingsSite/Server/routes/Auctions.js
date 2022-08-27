@@ -230,16 +230,12 @@ const Recom_Auctions=(async(userid)=>{
     
     Auctionslist = await Auctions.findAll()
     Auctions_count = await Auctions.count()
-
     rec_num=10
-    if (rec_num > Auctions_count/2 + 1)
-        rec_num = Auctions_count/2 + 1
+    if (rec_num > Auctions_count)rec_num = Auctions_count;
     
-    Auctionslist_index_map = {}
-    index_Auctionslist_map = {}
+    Auctions_map = {}
     for (i=0;i<Auctions_count;i++){
-        Auctionslist_index_map[Auctionslist[i].id]=i
-        index_Auctionslist_map[i]=Auctionslist[i].id
+        Auctions_map[Auctionslist[i].id]=i
     }
     
     let X =[]
@@ -250,13 +246,13 @@ const Recom_Auctions=(async(userid)=>{
     }
     
     
-    known_indexes = []
+    Weighted = []
 
     visits = await History.findAll({where:{UserId:userid}})
     visits.some((element)=>{
-        X[User_map[element.UserId]][Auctionslist_index_map[element.AuctionId]] = 2 //per view score
-        if (!known_indexes.includes([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]])) {
-            known_indexes.push([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]])
+        X[User_map[element.UserId]][Auctions_map[element.AuctionId]] = 2 
+        if (!Weighted.includes([User_map[element.UserId], Auctions_map[element.AuctionId]])) {
+            Weighted.push([User_map[element.UserId], Auctions_map[element.AuctionId]])
         }
     })        
 
@@ -264,12 +260,12 @@ const Recom_Auctions=(async(userid)=>{
 
     bids.some((element)=>{
         
-        if (!known_indexes.includes([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]])) {
-            X[User_map[element.UserId]][Auctionslist_index_map[element.AuctionId]] = 5 //per view score
-            known_indexes.push([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]]);
+        if (!Weighted.includes([User_map[element.UserId], Auctions_map[element.AuctionId]])) {
+            X[User_map[element.UserId]][Auctions_map[element.AuctionId]] = 5
+            Weighted.push([User_map[element.UserId], Auctions_map[element.AuctionId]]);
         }
         else{
-            X[User_map[element.UserId]][Auctionslist_index_map[element.AuctionId]] = 7 //per view score
+            X[User_map[element.UserId]][Auctions_map[element.AuctionId]] = 7
         }
     })        
 
@@ -278,7 +274,7 @@ const Recom_Auctions=(async(userid)=>{
     for(i=0;i<num_of_users;i++){
        let Vinternal=[]
        for(j=0;j<20;j++){
-        Vinternal.push(Math.random()*2) //*2 is the view score
+        Vinternal.push(Math.random()*2)
        }
        V.push(Vinternal)
     }
@@ -286,58 +282,57 @@ const Recom_Auctions=(async(userid)=>{
     for(i=0;i<20;i++){
         let Fin=[]
         for(j=0;j<Auctions_count;j++){
-            Fin.push(Math.random()*2)//*2 is the view score
+            Fin.push(Math.random()*2)
         }
         F.push(Fin);
 
      }
 
-     let previous_e = 0
-     if(known_indexes.length>0)
+     let e_prev = 0
+     if(Weighted.length>0)
      while(1){
  
-         known_indexes.some((elem) =>{  
-            let e_ij = X[elem[0]][elem[1]] - math.dot(V[elem[0]],arrayColumn(F,elem[1]))
+         Weighted.some((elem) =>{  
+            let eij = X[elem[0]][elem[1]] - math.dot(V[elem[0]],arrayColumn(F,elem[1]))
  
              for(k=0;k<20;k++){
-                 V[elem[0]][k] =V[elem[0]][k]+F[k][elem[1]]*0.001*2*e_ij
-                 F[k][elem[1]] =F[k][elem[1]]+V[elem[0]][k]*0.001*2*e_ij
+                 V[elem[0]][k] =V[elem[0]][k]+F[k][elem[1]]*0.001*2*eij
+                 F[k][elem[1]] =F[k][elem[1]]+V[elem[0]][k]*0.001*2*eij
              }
          })
-         let square_error_sum = 0.
+         let sq_error = 0.
      
-         known_indexes.some((elem) =>{   
-             let e_ij = X[elem[0]][elem[1]] - math.dot(V[elem[0]],arrayColumn(F,elem[1]))
-             let e_ij_sq = e_ij*e_ij
+         Weighted.some((elem) =>{   
+             let eij = X[elem[0]][elem[1]] - math.dot(V[elem[0]],arrayColumn(F,elem[1]))
+             let meij = eij*eij
      
-             square_error_sum += e_ij_sq
+             sq_error += meij
          })
-         let RMSE= math.sqrt(square_error_sum/known_indexes.length)
+         let RMSE= math.sqrt(sq_error/Weighted.length)
  
-         if (Math.abs(RMSE - previous_e) < 0.00001)
+         if (Math.abs(RMSE - e_prev) < 0.00001)
              break
          
-         previous_e = RMSE
+         e_prev = RMSE
      }
 
     let X2 = math.multiply(V,F)
+    usr = User_map[userid]
 
-    recomendations = []
-    user_index = User_map[userid]
-
+    recomended = []
     for(i=0;i<rec_num;i++){
-        var maxval = math.max(X2[user_index])
-        var max = X2[user_index].indexOf(maxval);
+        var maxval = math.max(X2[usr])
+        var max = X2[usr].indexOf(maxval);
         
-        if (X2[user_index][max] > 0 ){
+        if (X2[usr][max] > 0 ){
             if (Auctionslist[max].Active===1 && Auctionslist[max].UserId != userid)
-                recomendations.push(Auctionslist[max])
-            X2[user_index][max] = -1.
+                recomended.push(Auctionslist[max])
+            X2[usr][max] = -1.
         }
         else
             break;
     }
-    return recomendations
+    return recomended
 
 })
 
