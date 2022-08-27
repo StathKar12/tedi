@@ -75,6 +75,7 @@ function Auction(){
                     }else{
                         Auction.Number_of_Bids+=1;
                         Auction.Currently=data.Bid;
+                        Auction.Buyer_Id=Active;
                         axios.post(`https://localhost:8080/Auctions/update`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
                             navigate(0);
                         });
@@ -104,8 +105,11 @@ function Auction(){
                 Auction.Number_of_Bids+=1;
                 Auction.Active=2;
                 Auction.Currently=Auction.Buy_Price;
+                Auction.Buyer_Id=Active;
                 axios.post(`https://localhost:8080/Auctions/update`,Auction,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
-                    navigate(0);
+                    // axios.post(`https://localhost:8080/Messaging/`,{Buyer_id:Active,Seller_id:Auction.UserId,},{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) =>{
+                        navigate(0);
+                    // });
                 });
             }
         });

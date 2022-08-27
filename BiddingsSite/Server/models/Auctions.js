@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        Buyer_Id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     });
     Auctions.associate = (models) => {
         Auctions.hasMany(models.Categories, {
@@ -49,6 +53,9 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: "cascade",
         })
         Auctions.hasMany(models.Files, {
+            onDelete: "cascade",
+        })
+        Auctions.hasMany(models.Messaging, {
             onDelete: "cascade",
         })
         Auctions.hasOne(models.Location, {

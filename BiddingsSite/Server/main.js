@@ -33,6 +33,10 @@ app.use("/Location", LocationRouter);
 const UploadRouter = require("./routes/Upload");
 app.use("/Upload", UploadRouter);
 
+const UserMessaging = require("./routes/Messaging");
+app.use("/Messaging", UserMessaging);
+
+
 db.sequelize.sync().then(() =>
 { 
     Users.findByPk(1).then((res)=>{

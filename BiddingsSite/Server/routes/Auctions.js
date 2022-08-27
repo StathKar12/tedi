@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { Auctions ,Files , Categories , Users} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
+const { Op } = require("sequelize");
 
 
 const getCurrentDate=()=>{
@@ -41,7 +42,11 @@ router.get('/byid/:id',async (req, res) =>{
             }
             else if(today>end)
             {
-                Auction.Active=-1;  //Expired
+                if(Auction.Buyer_Id!== null){
+                    Auction.Active=2;  //Complete
+                }else{
+                    Auction.Active=-1;  //Expired
+                };
             }
             else{
                 Auction.Active=1; //Ok
@@ -56,9 +61,45 @@ router.get('/byid/:id',async (req, res) =>{
     res.json(Auction);
 })
 
+router.get('/CmpAuc/:id',async (req, res) =>{
+    const Given_id = req.params.id;
+    //const usrAucb =await Users.findAll({
+    //    attributes:["username"],
+    //    include:[
+    //        {model: Auctions,
+    //        where:{
+    //            [Op.or]: [
+    //                {[Op.and]: [
+    //                    {Active: 2},
+    //                    {Buyer_Id: Given_id}
+    //                ]},
+    //                {[Op.and]: [
+    //                   {UserId: Given_id},
+    //                   {Active:{[Op.ne]: null}}
+    //                ]}
+    //            ]
+    //        }}
+    //    ]
+    //});
+    const usrAuc =await Auctions.findAll({
+        where:{
+            [Op.or]: [
+                {[Op.and]: [
+                    {Active: 2},
+                    {Buyer_Id: Given_id}
+                ]},
+                {[Op.and]: [
+                   {UserId: Given_id},
+                   {Active:{[Op.ne]: null}}
+                ]}
+            ]
+        }
+    });
+    res.json(usrAuc);
+})
+
 router.get('/all',async (req, res) =>{
     
-
     var listofAuctions =[];
     var listofCategories=[];
     
@@ -102,11 +143,17 @@ router.get('/all',async (req, res) =>{
                 }
                 else if(today>end)
                 {
-                    listofAuctions[index].dataValues.Active=-1;  //Expired
-                    Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
+                    if(listofAuctions[index].dataValues.Buyer_Id!== null){
+                        listofAuctions[index].dataValues.Active=2; //Complete
+                        Auctions.update({Active:2},{ where: { id: listofAuctions[index].dataValues.id } });
+
+                    }else{
+                        listofAuctions[index].dataValues.Active=-1;  //Expired
+                        Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
+                    }
                 }else{
                     listofAuctions[index].dataValues.Active=1;  //ok
-                    Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
+                    Auctions.update({Active:1},{ where: { id: listofAuctions[index].dataValues.id } });
                 }
             }
         }

@@ -63,6 +63,7 @@ router.get("/AdminGet",validT, async (req, res) => {
     res.json(listofUsers);
 });
 
+
 router.get("/AdminGet/:id",validT, async (req, res) => {
     adminid=res.userId.id
     if(adminid!==1){

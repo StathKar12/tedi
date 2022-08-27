@@ -13,6 +13,8 @@ import UserList from "./Objects/UserList/UserList.js";
 import User from "./Objects/UserList/User.js";
 import { useEffect, useState  } from "react";
 import axios from 'axios';
+import Messaging from "./Objects/Messaging/Messaging";
+import Description from "./Objects/Messaging/Description";
 
 function App() {
 
@@ -38,6 +40,7 @@ const renderChoiceActive=()=>{
               <Link to="/">Home</Link>
               <Link to="/Auctions">Auctions</Link>
               <Link to="/PostAuction">PostAuction</Link>
+              <Link to="/Messaging">Messaging</Link>
             </div>
             <div className="navicationbar-right">
               <Link to="/LogOut">LogOut</Link>
@@ -49,6 +52,7 @@ const renderChoiceActive=()=>{
             <Route path='/Auctions' element={<Auctions/>} />
             <Route path='/PostAuction' element={<PostAuction/>} />
             <Route path='/Auction/:Id' element={<Auction/>} />
+            <Route path='/Messaging' element={<Messaging/>} />
             <Route path='/LogOut' element={<LogOut/>} />
             <Route path='/UpdateAuction/:Id' element={<UpdateAuction/>} />
           </Routes>
@@ -85,6 +89,7 @@ const renderChoiceActive=()=>{
             <Link to="/">Home</Link>
             <Link to="/Auctions">Auctions</Link>
             <Link to="/PostAuction">PostAuction</Link>
+            <Link to="/Messaging">Messaging</Link>
             <Link to="/UserList">UserList</Link>
 
           </div>
@@ -97,8 +102,10 @@ const renderChoiceActive=()=>{
           <Route path='/Auctions' element={<Auctions/>} />
           <Route path='/PostAuction' element={<PostAuction/>} />
           <Route path='/Auction/:Id' element={<Auction/>} />
+          <Route path='/Messaging' element={<Messaging/>} />
           <Route path='/LogOut' element={<LogOut/>} />
           <Route path='/User/:Id' element={<User/>} />
+          <Route path='/Description/:Id' element={<Description/>} />
           <Route path='/UserList' element={<UserList/>} />
           <Route path='/UpdateAuction/:Id' element={<UpdateAuction/>} />
           
