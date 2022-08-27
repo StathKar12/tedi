@@ -25,6 +25,7 @@
   .Auction .body {
     height: auto;
     place-content: center;
+    overflow: auto;
     border: 5px solid burlywood;
 
   }

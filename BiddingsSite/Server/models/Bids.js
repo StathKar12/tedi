@@ -12,6 +12,3 @@ module.exports = (sequelize, DataTypes) => {
 
    return Bids;
 }
-
-
-//Add ratings to user table

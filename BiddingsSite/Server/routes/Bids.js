@@ -42,7 +42,6 @@ router.post("/",validT, async (req, res) => {
     }
     const bid = req.body;
     req.body.UserId=biduser;
-    console.log(bid);
     var re;
     try{
         re=await Bids.create(bid);

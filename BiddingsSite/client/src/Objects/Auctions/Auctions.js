@@ -20,6 +20,7 @@ const options =
 function Auctions() {
   
   const [selected, setSelected] = useState([]);
+  const [listOfRecomended, setRecom] = useState([]);
 
   const fun2=(value)=>{try {return renderImage(value)}catch(err){return <h2> </h2>}}
 
@@ -55,6 +56,7 @@ function Auctions() {
     const [listOfAuctions, setlistOfAuctions] = useState([]);
     const [sendRequest ,setsendRequest] =useState();
 
+
     useEffect(() => {
       const More = document.getElementById('left').value
       const Less = document.getElementById('right').value
@@ -69,6 +71,10 @@ function Auctions() {
         params: {selected,More,Less,Desc,Loc}
       }).then((res) => {
         setlistOfAuctions(res.data);
+        });
+        axios.get("https://localhost:8080/Auctions/recomended", {headers: {AccT: sessionStorage.getItem("AccT")}}).then((res) => {
+          if(!res.data.error)  
+            setRecom(res.data);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[sendRequest]);
@@ -88,7 +94,31 @@ function Auctions() {
               <input type="text" className='Select' id="Loc"  placeholder="Search by Location" />
             <button  id="button" type="submit" onClick={setsendRequest}>Click To Search!</button> 
             </div>
-        </div> 
+        </div>
+        {listOfRecomended.map((value,key) => {
+            return ( 
+               <div className="Auction" key={key} onClick={()=>{navigate(`/Auction/${value.id}`)}}> 
+                <div className="title"> <span>{value.Name}</span> </div>
+                <div className="body" >  
+                  <h1> RECOMENDED </h1>
+                  {renderBuyPrice(value.Buy_Price)} 
+                  {fun2(value)}
+                  <h2>Current Bid :{value.Currently} </h2>
+                  <h2>Seller :{value.UserId}</h2>
+                  <h2>Description :{value.Description}</h2>
+                  {renderIfNotExpired(value)}
+                </div>
+                <div className="footer">
+                  <h2 id="left">Seller : {value.Seller}</h2>       
+                  <h2 id="right">Seller Rating :{value.SellerRating}</h2>
+                </div> 
+                <div className="footer">
+                  <h2 id="left">Starts : {value.Started.replace("T", " At: ")}</h2>       
+                  <h2 id="right">Ends :{value.Ends.replace("T", " At: ")}</h2>
+                </div> 
+              </div>
+            ); 
+        })}
        {listOfAuctions.map((value,key) => {
             return ( 
                <div className="Auction" key={key} onClick={()=>{navigate(`/Auction/${value.id}`)}}> 

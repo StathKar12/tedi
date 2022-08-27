@@ -15,7 +15,6 @@ function User() {
       if (res.data.error){
           alert(res.data.error)
       }else{
-          console.log("Approved");
           navigate(0);
       }
    });
@@ -53,6 +52,12 @@ function User() {
       return <button className='bidbutton' type="submit" onClick={onClick}>Click To Approve</button>;
     return <h1> </h1>
   })
+  const renderDel=(()=>{
+    if(String(Id)!=="1")
+      return  <button className='bidbutton' type="submit" onClick={onClick2}>Click To Delete</button>;
+    return <h1> </h1>
+  })
+
   return (
     <div className='User'>
         <table>
@@ -97,7 +102,7 @@ function User() {
             </tbody>
         </table>
         {renderApprove()}
-        <button className='bidbutton' type="submit" onClick={onClick2}>Click To Delete</button>
+        {renderDel()}
     </div>
   );
 }

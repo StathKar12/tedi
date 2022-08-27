@@ -1,9 +1,10 @@
 const e = require('express');
+const math=require('mathjs')
 const express = require('express');
 const router = express.Router();
-const { Auctions ,Files , Categories , Users,Location} = require("../models");
+const { Auctions ,Files , Categories , Users,Location,History,Bids} = require("../models");
 const {validT} = require("../middlewares/authMiddleware");
-
+const arrayColumn = (arr, n) => arr.map((x) => x[n]);
 
 const getCurrentDate=()=>{
     var today = new Date();
@@ -48,11 +49,12 @@ router.get('/byid/:id',async (req, res) =>{
             }
         }
     }
-    if(Auction!=null)await Auctions.update({Active:Auction.Active},{ where: { id: Auction.id } });
+    if(Auction!=null)await Auctions.update({Active:Auction.Active},{ where: { id: Auction.id } ,logging: false});
 
     const usrs =await Users.findByPk(Auction.UserId);
     Auction.dataValues.Seller=usrs.username;
     Auction.dataValues.SellerRating=usrs.Rating;
+
     res.json(Auction);
 })
 
@@ -152,15 +154,15 @@ router.get('/all',async (req, res) =>{
                 if(today<start)
                 {
                     listofAuctions[index].dataValues.Active=0;   //not yet started
-                    Auctions.update({Active:0},{ where: { id: listofAuctions[index].dataValues.id } });
+                    Auctions.update({Active:0},{ where: { id: listofAuctions[index].dataValues.id },logging: false });
                 }
                 else if(today>end)
                 {
                     listofAuctions[index].dataValues.Active=-1;  //Expired
-                    Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
+                    Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } ,logging: false});
                 }else{
                     listofAuctions[index].dataValues.Active=1;  //ok
-                    Auctions.update({Active:-1},{ where: { id: listofAuctions[index].dataValues.id } });
+                    Auctions.update({Active:1},{ where: { id: listofAuctions[index].dataValues.id } ,logging: false});
                 }
             }
         }
@@ -177,7 +179,6 @@ router.get('/all',async (req, res) =>{
             }
         });
     });
-
     res.json(listofAuctions);
 })
   
@@ -193,7 +194,7 @@ module.exports = router;
 
 
 router.post('/update/',validT,async (req, res) =>{
-    const UpdateAuction = await Auctions.upsert(req.body);
+    const UpdateAuction = await Auctions.upsert(req.body,{logging: false});
     res.json(UpdateAuction);
 })
 
@@ -215,4 +216,133 @@ router.post('/Update/byid/:id',validT,async (req, res) =>{
     await Auctions.destroy({where: {id:reqId},});
     const auction=req.body;
     await Auctions.create(auction).then(result => res.json(result));
+})
+
+const Recom_Auctions=(async(userid)=>{
+    userslist = await Users.findAll()
+    num_of_users = await Users.count()
+    
+    User_map = {}
+
+    for(i=0;i<num_of_users;i++){
+        User_map[userslist[i].id]=i
+    }
+    
+    Auctionslist = await Auctions.findAll()
+    Auctions_count = await Auctions.count()
+
+    rec_num=10
+    if (rec_num > Auctions_count/2 + 1)
+        rec_num = Auctions_count/2 + 1
+    
+    Auctionslist_index_map = {}
+    index_Auctionslist_map = {}
+    for (i=0;i<Auctions_count;i++){
+        Auctionslist_index_map[Auctionslist[i].id]=i
+        index_Auctionslist_map[i]=Auctionslist[i].id
+    }
+    
+    let X =[]
+    for(i=0;i<num_of_users;i++){
+        for(j=0;j<Auctions_count;j++){
+            X.push([0,0]);
+        }
+    }
+    
+    
+    known_indexes = []
+
+    visits = await History.findAll({where:{UserId:userid}})
+    visits.some((element)=>{
+        X[User_map[element.UserId]][Auctionslist_index_map[element.AuctionId]] = 2 //per view score
+        if (!known_indexes.includes([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]])) {
+            known_indexes.push([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]])
+        }
+    })        
+
+    bids = await Bids.findAll({where:{UserId:userid}})
+
+    bids.some((element)=>{
+        
+        if (!known_indexes.includes([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]])) {
+            X[User_map[element.UserId]][Auctionslist_index_map[element.AuctionId]] = 5 //per view score
+            known_indexes.push([User_map[element.UserId], Auctionslist_index_map[element.AuctionId]]);
+        }
+        else{
+            X[User_map[element.UserId]][Auctionslist_index_map[element.AuctionId]] = 7 //per view score
+        }
+    })        
+
+    let V=[]
+    let F=[]
+    for(i=0;i<num_of_users;i++){
+       let Vinternal=[]
+       for(j=0;j<20;j++){
+        Vinternal.push(Math.random()*2) //*2 is the view score
+       }
+       V.push(Vinternal)
+    }
+    
+    for(i=0;i<20;i++){
+        let Fin=[]
+        for(j=0;j<Auctions_count;j++){
+            Fin.push(Math.random()*2)//*2 is the view score
+        }
+        F.push(Fin);
+
+     }
+
+     let previous_e = 0
+     if(known_indexes.length>0)
+     while(1){
+ 
+         known_indexes.some((elem) =>{  
+            let e_ij = X[elem[0]][elem[1]] - math.dot(V[elem[0]],arrayColumn(F,elem[1]))
+ 
+             for(k=0;k<20;k++){
+                 V[elem[0]][k] =V[elem[0]][k]+F[k][elem[1]]*0.001*2*e_ij
+                 F[k][elem[1]] =F[k][elem[1]]+V[elem[0]][k]*0.001*2*e_ij
+             }
+         })
+         let square_error_sum = 0.
+     
+         known_indexes.some((elem) =>{   
+             let e_ij = X[elem[0]][elem[1]] - math.dot(V[elem[0]],arrayColumn(F,elem[1]))
+             let e_ij_sq = e_ij*e_ij
+     
+             square_error_sum += e_ij_sq
+         })
+         let RMSE= math.sqrt(square_error_sum/known_indexes.length)
+ 
+         if (Math.abs(RMSE - previous_e) < 0.00001)
+             break
+         
+         previous_e = RMSE
+     }
+
+    let X2 = math.multiply(V,F)
+
+    recomendations = []
+    user_index = User_map[userid]
+
+    for(i=0;i<rec_num;i++){
+        var maxval = math.max(X2[user_index])
+        var max = X2[user_index].indexOf(maxval);
+        
+        if (X2[user_index][max] > 0 ){
+            if (Auctionslist[max].Active===1 && Auctionslist[max].UserId != userid)
+                recomendations.push(Auctionslist[max])
+            X2[user_index][max] = -1.
+        }
+        else
+            break;
+    }
+    return recomendations
+
+})
+
+router.get('/recomended',validT,async (req, res) =>{
+    usrid=res.userId.id;
+    recomended=await Recom_Auctions(usrid);
+    res.json(recomended)
 })
