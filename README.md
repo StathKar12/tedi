@@ -15,5 +15,7 @@ npm install sequelize-cli
 db_pass : root
 
 #admin
+
 username : admin
+
 password : password
