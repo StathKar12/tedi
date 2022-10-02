@@ -15,6 +15,9 @@ import { useEffect, useState  } from "react";
 import axios from 'axios';
 import Messaging from "./Objects/Messaging/Messaging";
 import Description from "./Objects/Messaging/Description";
+import Incoming from "./Objects/Messaging/Incoming";
+import Outgoing from "./Objects/Messaging/Outgoing";
+import Message from "./Objects/Messaging/Message";
 
 function App() {
 
@@ -53,6 +56,10 @@ const renderChoiceActive=()=>{
             <Route path='/PostAuction' element={<PostAuction/>} />
             <Route path='/Auction/:Id' element={<Auction/>} />
             <Route path='/Messaging' element={<Messaging/>} />
+            <Route path='/Description/:Id' element={<Description/>} />
+            <Route path='/Message/:Id' element={<Message/>} />
+            <Route path='/Messaging/Incoming' element={<Incoming/>} />
+            <Route path='/Messaging/Outgoing' element={<Outgoing/>} />
             <Route path='/LogOut' element={<LogOut/>} />
             <Route path='/UpdateAuction/:Id' element={<UpdateAuction/>} />
           </Routes>
@@ -106,6 +113,9 @@ const renderChoiceActive=()=>{
           <Route path='/LogOut' element={<LogOut/>} />
           <Route path='/User/:Id' element={<User/>} />
           <Route path='/Description/:Id' element={<Description/>} />
+          <Route path='/Message/:Id' element={<Message/>} />
+          <Route path='/Messaging/Incoming' element={<Incoming/>} />
+          <Route path='/Messaging/Outgoing' element={<Outgoing/>} />
           <Route path='/UserList' element={<UserList/>} />
           <Route path='/UpdateAuction/:Id' element={<UpdateAuction/>} />
           

@@ -15,7 +15,7 @@ router.post("/",validT, async (req, res) => {
 });
 
 
-router.get("/byid/:id",validT, async (req, res) => {
+router.get("/byid/:id", async (req, res) => {
     Id=req.params.id;
     const listOfCategories = await Categories.findAll({where:{AuctionId:Id}});
     res.json(listOfCategories);

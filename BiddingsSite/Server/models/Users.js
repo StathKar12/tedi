@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 module.exports = (sequelize, DataTypes) => {
     const Users = sequelize.define("Users", {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             primaryKey: true,
             autoIncrement: true
         },
@@ -52,6 +52,12 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: "cascade",
         })
         Users.hasOne(models.Location, {
+            onDelete: "cascade",
+        })
+        Users.hasOne(models.History, {
+            onDelete: "cascade",
+        })
+        Users.hasMany(models.Messaging, {
             onDelete: "cascade",
         })
     }

@@ -1,16 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
     const Auctions = sequelize.define("Auctions", {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             primaryKey: true,
             autoIncrement: true
         },
         Name: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(500),
             allowNull: false,
         },
         Description: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(4000),
             allowNull: false,
         },
         Currently: {
@@ -55,13 +55,15 @@ module.exports = (sequelize, DataTypes) => {
         Auctions.hasMany(models.Files, {
             onDelete: "cascade",
         })
-        Auctions.hasMany(models.Messaging, {
-            onDelete: "cascade",
-        })
         Auctions.hasOne(models.Location, {
             onDelete: "cascade",
         })
-
+        Auctions.hasOne(models.History, {
+            onDelete: "cascade",
+        })
+        Auctions.hasOne(models.Messaging,{
+            onDelete: "cascade",
+        })
     }
     return Auctions;
 }

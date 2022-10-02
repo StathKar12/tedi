@@ -5,13 +5,10 @@ import { useNavigate,useParams } from "react-router-dom";
 import {Formik,Form,Field,ErrorMessage} from "formik";
 import * as Yup from 'yup';
 import "./Auctions.css"
-import {MapContainer , TileLayer,Marker, Popup  } from 'react-leaflet'
-
-// import 'leaflet/dist/leaflet.css';
-
+import {MapContainer , TileLayer,Marker, Popup  } from 'react-leaflet';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 import {Icon} from 'leaflet'
-
+import "./map.css"
 const getToday=()=>{
     var today = new Date();
     var dd = today.getDate();
@@ -153,19 +150,28 @@ function Auction(){
         
         axios.get(`https://localhost:8080/Users/Active/`,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res)=>{
              if (res.data.error){
+                axios.get(`https://localhost:8080/Auctions/byid/${Id}`).then((res2)=>{
+            
+                    res2.data.Started=res2.data.Started.replace("T", " At: ");
+                    res2.data.Ends=res2.data.Ends.replace("T", " At: ");
+                   
+                    setAuction(res2.data);
+                });
                 setActive(-1);
               }
               else{
                 setActive(res.data);
+                axios.get(`https://localhost:8080/Auctions/byid/${Id}`).then((res2)=>{
+            
+                    res2.data.Started=res2.data.Started.replace("T", " At: ");
+                    res2.data.Ends=res2.data.Ends.replace("T", " At: ");
+                   
+                    setAuction(res2.data);
+                    axios.post(`https://localhost:8080/History/`,{AuctionId:res2.data.id,UserId:res.data},{headers: {AccT: sessionStorage.getItem("AccT")}});
+                });
               }
         });
-        axios.get(`https://localhost:8080/Auctions/byid/${Id}`).then((res)=>{
-            
-            res.data.Started=res.data.Started.replace("T", " At: ");
-            res.data.Ends=res.data.Ends.replace("T", " At: ");
-           
-            setAuction(res.data);
-        });
+
         axios.get(`https://localhost:8080/Upload/byid/${Id}`).then((res2)=>{
             setFiles(res2.data);    
         });
@@ -175,7 +181,7 @@ function Auction(){
         axios.get(`https://localhost:8080/Bids/byid/${Id}`).then((res4)=>{
             setBids(res4.data);
         });
-        axios.get(`https://localhost:8080/Categories/byid/${Id}`,{headers: {AccT: sessionStorage.getItem("AccT")}}).then((res5)=>{
+        axios.get(`https://localhost:8080/Categories/byid/${Id}`).then((res5)=>{
             if (!res5.data.error){
                 setCat(res5)
             }
@@ -282,12 +288,14 @@ function Auction(){
                       );
         }
     })
+
     const renderMap=(()=>{
 
-        if(typeof location.Longtitude!=="undefined" && typeof location.Latitude!=="undefined"){
+        if(typeof location.Longtitude!=="undefined" && typeof location.Latitude!=="undefined" &&( location.Longtitude!==0 ||  location.Latitude!==0)){
+
            return(
            <MapContainer className='mapleaf' center={{lat:location.Latitude,lng:location.Longtitude}} zoom={12} ref={mapref}>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossorigin=""/>
+                {/* <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossOrigin="" /> */}
                 <TileLayer url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=5BGWMRomNRQMyt3ZdEn6" />
                 <Marker position={[location.Latitude, location.Longtitude]} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})} >
                     <Popup>
@@ -301,7 +309,6 @@ function Auction(){
 
     const renderCats=(()=>{
         if(typeof Cats.data !== "undefined"){
-            
             let catarray="Categories :";
             Cats.data.forEach((element,index)=>{
                 if(index===0)
@@ -334,8 +341,8 @@ function Auction(){
                 <h3 id="bd">Starts : {Auction.Started}</h3>       
                 <h3 id="bd">Ends :{Auction.Ends}</h3>
                 <h3 id="bd">Description:</h3>       
-                <h3 id="bd" className='desc'>{Auction.Description}</h3>
                 {renderCats()}
+                <h3 id="bd" className='desc'>{Auction.Description}</h3>
                 {renderMap()}
                 {renderDownloadXML()}
                 {renderChanges()}

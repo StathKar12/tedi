@@ -85,7 +85,7 @@ router.post('/AdminApprove/:id',validT,async (req, res) =>{
         res.json({error:"You are not an admin"});
         return;
     }
-    const UpdateUser = await Users.update({Active:req.body.Active},{ where: { id: req.body.id } });
+    const UpdateUser = await Users.update({Active:req.body.Active},{ where: { id: req.body.id } },{logging: false});
     res.json(UpdateUser);
 })
 

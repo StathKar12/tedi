@@ -10,7 +10,6 @@ function LogOut() {
 
 
   const LogOut = () => {
-    console.log("TEST\n");
     sessionStorage.removeItem("AccT");
     navigate("/");
     navigate(0);
