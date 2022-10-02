@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
         Auctions.hasOne(models.History, {
             onDelete: "cascade",
         })
-        Auctions.hasOne(models.Messaging,{
+        Auctions.hasMany(models.Messaging,{
             onDelete: "cascade",
         })
     }
