@@ -1,5 +1,7 @@
 # tedi
 
+In this project we focus on the full stack development of a bidding site.
+
 
 #installs
 
